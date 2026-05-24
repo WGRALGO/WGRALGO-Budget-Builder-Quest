@@ -15,6 +15,9 @@ captures/
 .externalNativeBuild/
 .cxx/
 
+# --- Local release artifacts ---
+release-builds/
+
 # --- Signing / secrets (NEVER commit) ---
 local.properties
 android/local.properties

@@ -1,9 +1,17 @@
 apply plugin: 'com.android.application'
 
-def keystorePropsFile = file("${System.getProperty('user.home')}/.budgetbuilder-keystore.txt")
+def keystorePropsFile = rootProject.file("keystore.properties")
 def keystoreProps = new Properties()
+def hasReleaseSigning = false
 if (keystorePropsFile.exists()) {
-    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+    hasReleaseSigning = true
+} else if (System.getenv("BBQ_KEYSTORE_FILE")) {
+    keystoreProps.setProperty("storeFile", System.getenv("BBQ_KEYSTORE_FILE"))
+    keystoreProps.setProperty("storePassword", System.getenv("BBQ_KEYSTORE_PASSWORD") ?: "")
+    keystoreProps.setProperty("keyAlias", System.getenv("BBQ_KEY_ALIAS") ?: "")
+    keystoreProps.setProperty("keyPassword", System.getenv("BBQ_KEY_PASSWORD") ?: "")
+    hasReleaseSigning = true
 }
 
 android {
@@ -13,30 +21,37 @@ android {
         applicationId "com.wgra.budgetbuilder2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "2.2"
+        versionCode 100
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
     signingConfigs {
         release {
-            if (keystoreProps['KEYSTORE_PATH']) {
-                storeFile file(keystoreProps['KEYSTORE_PATH'])
-                storePassword keystoreProps['KEYSTORE_PASSWORD']
-                keyAlias keystoreProps['KEY_ALIAS']
-                keyPassword keystoreProps['KEY_PASSWORD']
+            if (hasReleaseSigning) {
+                storeFile file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
             }
         }
     }
+
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
-            signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
