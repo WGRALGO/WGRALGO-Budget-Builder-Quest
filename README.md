@@ -37,10 +37,26 @@ their **Money Health Score**.
 
 ## Screenshots
 
-Screenshots will be added to [`screenshots/`](./screenshots/) in a future
-release. The app uses a premium black + gold theme: a centered logo landing
-screen with **Start Quest** / **How It Works** actions, then a three-step
-budgeting flow, then a results screen with the Money Health Score badge.
+Captured at a 412×915 phone viewport from the same HTML/CSS/JS that ships
+inside the Android WebView. Stored in [`screenshots/`](./screenshots/).
+
+| Landing | How It Works | Pick a profile |
+| :---: | :---: | :---: |
+| ![Landing](./screenshots/01-landing.png) | ![How It Works modal](./screenshots/02-how-it-works.png) | ![Step 1 — pick profile](./screenshots/03-step1-profile.png) |
+
+| Build a budget | Money curveball | Feedback after a choice |
+| :---: | :---: | :---: |
+| ![Step 2 — build budget](./screenshots/04-step2-budget.png) | ![Step 3 — curveball](./screenshots/05-step3-curveball.png) | ![Step 3 — feedback](./screenshots/06-step3-feedback.png) |
+
+| Results — Money Health Score | Tablet landing | Launcher icon (no white square) |
+| :---: | :---: | :---: |
+| ![Results](./screenshots/07-results.png) | ![Tablet landing](./screenshots/08-tablet-landing.png) | ![Launcher icon](./screenshots/09-launcher-icon.png) |
+
+Full-page scroll of the results screen, including the *What helped or hurt*
+notes list, lives at
+[`screenshots/07b-results-full.png`](./screenshots/07b-results-full.png).
+The splash screen as rendered by Android lives at
+[`screenshots/10-splash.png`](./screenshots/10-splash.png).
 
 ---
 
