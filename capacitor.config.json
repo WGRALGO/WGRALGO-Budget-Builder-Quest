@@ -1,0 +1,13 @@
+{
+  "appId": "com.wgra.budgetbuilder2",
+  "appName": "Budget Builder Quest",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#000000",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}

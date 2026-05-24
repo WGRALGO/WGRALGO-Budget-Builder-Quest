@@ -1,0 +1,1437 @@
+<!-- ================= GLOBAL BLACK BACKDROP (WEBVIEW) ================= -->
+<style>
+  html, body {
+    background: #000000;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+</style>
+
+<!-- ================= SOCIAL ICONS — BLACK BACKGROUND VERSION ================= -->
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-soft: #f5e4b3;
+    --bg-black: #000000;
+  }
+
+  /* FULL BLACK BACKDROP FOR THE WIDGET */
+  .wgra-social-widget {
+    background: var(--bg-black);
+    padding: 18px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wgra-footer-social {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .wgra-footer-social a {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #0b0b0b;
+    border: 1px solid rgba(212,175,55,0.75);
+
+    transition: background 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+    text-decoration: none;
+  }
+
+  .wgra-footer-social a:hover {
+    background: rgba(212,175,55,0.18);
+    border-color: var(--gold-soft);
+    box-shadow:
+      0 0 12px rgba(212,175,55,0.85),
+      0 0 28px rgba(212,175,55,0.55);
+  }
+
+  .wgra-footer-social svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--gold-soft);
+    pointer-events: none;
+  }
+</style>
+
+<div class="wgra-social-widget">
+  <div class="wgra-footer-social">
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61584225549390" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M13 3h4V0h-4c-2.8 0-5 2.2-5 5v3H6v4h2v9h4v-9h3l1-4h-4V5c0-.6.4-1 1-1z"/></svg>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/wealthgapresolutionalgorithm/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8zm4 3.5A4.5 4.5 0 1 1 7.5 13 4.5 4.5 0 0 1 12 8.5zm0 2A2.5 2.5 0 1 0 14.5 13 2.5 2.5 0 0 0 12 10.5zm4.75-3.4a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z"/></svg>
+    </a>
+
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@wealthgapresolution" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+      <svg viewBox="0 0 24 24"><path d="M15.5 3h2.1c.1 1 .5 1.8 1.1 2.5a4 4 0 0 0 2.4 1v2.4a6 6 0 0 1-3.3-1.1 6 6 0 0 1-1-1v6.7a4.9 4.9 0 1 1-4.9-4.8 5 5 0 0 1 .8.07v2.42a2.5 2.5 0 1 0 1.7 2.37V3z"/></svg>
+    </a>
+
+    <!-- X -->
+    <a href="https://x.com/wealthalgorithm" target="_blank" rel="noopener noreferrer" aria-label="X">
+      <svg viewBox="0 0 24 24"><path d="M5 4h3.1l3 4.2L14.7 4H19l-5.1 6.6L19.5 20h-3.1l-3.3-4.7L9 20H4.5l5.3-6.7z"/></svg>
+    </a>
+
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/@WealthGapResolutionAlgorithm" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18 5 12 5 12 5s-6 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 9 2 12 2 12s0 3 .4 4.8a2.5 2.5 0 0 0 1.8 1.8C6 19 12 19 12 19s6 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8C22 15 22 12 22 12s0-3-.4-4.8zM10 9.5l5 2.5-5 2.5v-5z"/></svg>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/in/richard-blackman-3b6b77400" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M5 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-2 6h4v12H3V9zm6 0h3.8v1.7h.1C14.6 9.8 16 9 17.9 9 22 9 22 11.7 22 15.2V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8-1.7 0-1.9 1.3-1.9 2.7V21h-4V9z"/></svg>
+    </a>
+
+  </div>
+</div>
+
+<!-- ================= GOFUNDME — FULL WIDTH BLACK BAR ================= -->
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-soft: #f5e4b3;
+    --bg-black: #000000;
+  }
+
+  /* MATCH SOCIAL WIDGET BEHAVIOR (NO EXPLICIT WIDTH) */
+  .wgra-gofundme-bar {
+    background: var(--bg-black);
+    padding: 18px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wgra-gofundme-row {
+    display: flex;
+    justify-content: center;
+  }
+
+  .wgra-gofundme-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    background: #0b0b0b;
+    border: 1px solid rgba(212,175,55,0.75);
+    text-decoration: none;
+    font-size: 11px;
+    color: var(--gold-soft);
+    white-space: nowrap;
+    transition:
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .wgra-gofundme-link svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--gold-soft);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  /* GLOW ONLY — NO WASH */
+  .wgra-gofundme-link:hover {
+    background: #0b0b0b;
+    border-color: var(--gold-soft);
+    box-shadow:
+      0 0 12px rgba(212,175,55,0.85),
+      0 0 28px rgba(212,175,55,0.55);
+  }
+</style>
+
+<div class="wgra-gofundme-bar">
+  <div class="wgra-gofundme-row">
+    <a class="wgra-gofundme-link"
+       href="https://www.gofundme.com/f/knowledge-is-the-weaponfight-the-wealth-gap?attribution_id=sl:4cb3e930-f2d3-4310-ab4f-99b37fab4162"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="GoFundMe – Fight the Wealth Gap">
+
+      <!-- School / Education Icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <!-- flag pole -->
+        <line x1="12" y1="2.5" x2="12" y2="6"/>
+        <!-- flag -->
+        <path d="M12 3h4l-1.5 1.5L16 6h-4z"/>
+
+        <!-- roof -->
+        <path d="M3 11L12 5l9 6"/>
+
+        <!-- building -->
+        <rect x="5" y="11" width="14" height="9" rx="1"/>
+
+        <!-- door -->
+        <rect x="10.8" y="14" width="2.4" height="6"/>
+
+        <!-- windows -->
+        <rect x="6.8" y="13" width="2" height="2"/>
+        <rect x="15.2" y="13" width="2" height="2"/>
+        <rect x="6.8" y="16" width="2" height="2"/>
+        <rect x="15.2" y="16" width="2" height="2"/>
+      </svg>
+
+      <span>https://www.gofundme.com/u/rich-blackman</span>
+    </a>
+  </div>
+</div>
+
+
+<!-- ================= BUDGET BUILDER QUEST™ ================= -->
+<style>
+  :root {
+    --wgra-gold: #d4af37;
+    --wgra-gold-soft: #fbe79a;
+    --wgra-gold-deep: #b07a12;
+    --wgra-bg-deep: #050505;
+    --wgra-text-main: #fdfaf0;
+    --wgra-text-soft: #f5e4b3;
+    --wgra-alert-bad: #ff6b6b;
+    --wgra-alert-good: #31e27f;
+  }
+
+  #wgra-budget-game-root {
+    background: radial-gradient(circle at top, #181818 0%, #050505 60%);
+    padding: 40px 16px 70px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--wgra-text-main);
+  }
+
+  .wgra-budget-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .wgra-budget-header {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  .wgra-budget-title {
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wgra-gold-soft);
+    margin: 0 0 8px;
+  }
+
+  .wgra-budget-subtitle {
+    font-size: 16px;
+    color: var(--wgra-text-soft);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .wgra-budget-divider {
+    width: 180px;
+    height: 4px;
+    margin: 18px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--wgra-gold-deep),
+      var(--wgra-gold-soft),
+      var(--wgra-gold),
+      var(--wgra-gold-soft),
+      var(--wgra-gold-deep)
+    );
+    background-size: 260% 260%;
+    animation: wgra-budget-gold-flow 7s linear infinite;
+  }
+
+  @keyframes wgra-budget-gold-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* BIGGER, BOLDER STEP INDICATOR */
+  .wgra-budget-step-indicator {
+    text-align: center;
+    margin-bottom: 22px;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--wgra-gold-soft);
+    padding: 8px 10px;
+    border-top: 1px solid rgba(245,210,106,0.45);
+    border-bottom: 1px solid rgba(245,210,106,0.45);
+    background: rgba(0,0,0,0.65);
+  }
+
+  .wgra-budget-main-card {
+    border-radius: 24px;
+    border: 1px solid rgba(245,210,106,0.55);
+    background: radial-gradient(circle at top left, rgba(245,210,106,0.2), #050505 55%);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 22px 50px rgba(0,0,0,0.95);
+    padding: 22px 22px 20px;
+  }
+
+  .wgra-budget-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--wgra-gold-soft);
+    margin: 0 0 12px;
+  }
+
+  .wgra-budget-section-copy {
+    font-size: 14px;
+    color: var(--wgra-text-soft);
+    margin-bottom: 18px;
+  }
+
+  /* PROFILE CARDS */
+  .wgra-budget-profiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .wgra-budget-profile-card {
+    border-radius: 18px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(5,5,5,0.9);
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  }
+
+  .wgra-budget-profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.9);
+    border-color: var(--wgra-gold-soft);
+  }
+
+  .wgra-budget-profile-card.wgra-selected {
+    border-color: var(--wgra-alert-good);
+    box-shadow: 0 0 0 1px rgba(49,226,127,0.5), 0 14px 30px rgba(0,0,0,0.95);
+    background: radial-gradient(circle at top, rgba(49,226,127,0.22), #050505 70%);
+  }
+
+  .wgra-budget-profile-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  .wgra-budget-profile-income {
+    font-size: 14px;
+    color: var(--wgra-gold-soft);
+    margin-bottom: 6px;
+  }
+
+  .wgra-budget-profile-desc {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-income-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .wgra-budget-income-row label {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-income-input {
+    background: rgba(0,0,0,0.8);
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.7);
+    padding: 6px 10px;
+    color: var(--wgra-text-main);
+    font-size: 14px;
+    width: 130px;
+  }
+
+  .wgra-budget-income-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(245,210,106,0.9);
+  }
+
+  .wgra-budget-income-note {
+    font-size: 12px;
+    color: var(--wgra-text-soft);
+    opacity: 0.9;
+    margin-bottom: 4px;
+  }
+
+  /* BUDGET TABLE */
+  .wgra-budget-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px 12px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .wgra-budget-grid-header {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--wgra-text-soft);
+    opacity: 0.9;
+  }
+
+  .wgra-budget-category-label {
+    font-size: 14px;
+    color: var(--wgra-text-main);
+  }
+
+  .wgra-budget-category-hint {
+    font-size: 11px;
+    color: var(--wgra-text-soft);
+    opacity: 0.85;
+  }
+
+  .wgra-budget-number-input {
+    width: 100%;
+    background: rgba(0,0,0,0.85);
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.7);
+    padding: 6px 10px;
+    color: var(--wgra-text-main);
+    font-size: 13px;
+  }
+
+  .wgra-budget-number-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(245,210,106,0.9);
+  }
+
+  .wgra-budget-percentage {
+    font-size: 13px;
+    text-align: right;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .wgra-budget-summary-row strong {
+    color: var(--wgra-gold-soft);
+  }
+
+  .wgra-budget-summary-status {
+    font-size: 13px;
+  }
+
+  .wgra-budget-summary-status.wgra-ok {
+    color: var(--wgra-alert-good);
+  }
+
+  .wgra-budget-summary-status.wgra-bad {
+    color: var(--wgra-alert-bad);
+  }
+
+  .wgra-budget-alert {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--wgra-alert-bad);
+  }
+
+  .wgra-budget-hints {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--wgra-text-soft);
+  }
+
+  /* EVENT + SCORE SECTIONS */
+  .wgra-budget-event-box {
+    border-radius: 20px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(5,5,5,0.88);
+    padding: 14px 14px 12px;
+    margin-bottom: 14px;
+  }
+
+  .wgra-budget-event-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--wgra-gold-soft);
+    margin-bottom: 6px;
+  }
+
+  .wgra-budget-event-text {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-event-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  /* FORCE TEXT VISIBLE IN OPTION BOXES */
+  .wgra-budget-event-option {
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(0,0,0,0.85);
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: left;
+    color: var(--wgra-text-main);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease,
+                border-color 0.12s ease, background 0.12s ease;
+  }
+
+  .wgra-budget-event-option:hover {
+    transform: translateY(-1px);
+    border-color: var(--wgra-gold-soft);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.9);
+  }
+
+  .wgra-budget-event-options.wgra-locked .wgra-budget-event-option {
+    pointer-events: none;
+  }
+
+  .wgra-budget-event-option.wgra-selected {
+    border-color: var(--wgra-alert-good);
+    background: radial-gradient(circle at top, rgba(49,226,127,0.25), #050505 80%);
+    box-shadow: 0 0 0 1px rgba(49,226,127,0.4), 0 12px 26px rgba(0,0,0,0.9);
+  }
+
+  .wgra-budget-event-feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-event-feedback strong {
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+
+  /* HIGH-CONTRAST SCORE BADGE */
+  .wgra-budget-score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.9);
+    background: radial-gradient(circle at top, #181818 0%, #050505 70%);
+    color: var(--wgra-gold-soft);
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 10px 26px rgba(0,0,0,0.9);
+    margin-bottom: 8px;
+  }
+
+  .wgra-budget-final-copy {
+    font-size: 14px;
+    color: var(--wgra-text-soft);
+    margin-bottom: 10px;
+  }
+
+  .wgra-budget-final-list {
+    margin: 8px 0 0 16px;
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-final-list li {
+    margin-bottom: 3px;
+  }
+
+  .wgra-budget-end-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--wgra-gold-soft);
+  }
+
+  /* BUTTON ROW */
+  .wgra-budget-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .wgra-budget-btn,
+  .wgra-budget-btn-secondary {
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.8);
+    padding: 9px 22px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.85),
+      0 10px 24px rgba(0,0,0,0.9);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
+  }
+
+  .wgra-budget-btn {
+    background: radial-gradient(circle at top, #fbe79a 0%, #d4af37 45%, #b07a12 100%);
+    color: #1b1303;
+  }
+
+  .wgra-budget-btn-secondary {
+    background: rgba(0,0,0,0.85);
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-btn:hover,
+  .wgra-budget-btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 12px 28px rgba(0,0,0,0.95);
+    filter: brightness(1.05);
+  }
+
+  .wgra-budget-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.7),
+      0 6px 16px rgba(0,0,0,0.75);
+  }
+
+  .wgra-budget-controls-left,
+  .wgra-budget-controls-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 800px) {
+    .wgra-budget-profiles {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .wgra-budget-main-card {
+      padding: 18px 14px 18px;
+    }
+    .wgra-budget-grid {
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .wgra-budget-title {
+      font-size: 26px;
+    }
+  }
+</style>
+
+<div id="wgra-budget-game-root">
+  <div class="wgra-budget-shell">
+    <div class="wgra-budget-header">
+      <h2 class="wgra-budget-title">Budget Builder Quest™</h2>
+      <p class="wgra-budget-subtitle">
+        Build a monthly budget, respond to money curveballs, and see how your choices impact your
+        Money Health Score.
+      </p>
+      <div class="wgra-budget-divider"></div>
+    </div>
+
+    <div class="wgra-budget-step-indicator" id="wgra-budget-step-indicator"></div>
+
+    <div class="wgra-budget-main-card" id="wgra-budget-main-card">
+      <!-- Dynamic content injected by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const TOTAL_QUESTIONS = 5;
+
+    const PROFILES = [
+      {
+        id: "student",
+        name: "Student Starter",
+        income: 1600,
+        desc: "Part-time job + classes. Roommates or dorm, tight but workable budget."
+      },
+      {
+        id: "young-earner",
+        name: "Early Career",
+        income: 2600,
+        desc: "First full-time job. Rent, transportation, and student loans in the mix."
+      },
+      {
+        id: "steady-family",
+        name: "Family Builder",
+        income: 3800,
+        desc: "Household with kids or shared responsibilities. More moving pieces."
+      }
+    ];
+
+    const CATEGORIES = [
+      { id: "housing", label: "Housing & utilities", hint: "Rent, mortgage, lights, heat", defaultPct: 0.30 },
+      { id: "food", label: "Food & household", hint: "Groceries, basics, essentials", defaultPct: 0.15 },
+      { id: "transport", label: "Transportation", hint: "Metro, gas, ride shares", defaultPct: 0.10 },
+      { id: "debt", label: "Debt payments", hint: "Cards, loans, buy-now-pay-later", defaultPct: 0.10 },
+      { id: "savings", label: "Savings & investing", hint: "Emergency fund, investing, sinking funds", defaultPct: 0.15 },
+      { id: "fun", label: "Fun & lifestyle", hint: "Streaming, outings, hobbies", defaultPct: 0.20 }
+    ];
+
+    const EVENTS = [
+      {
+        id: "car-repair",
+        title: "Surprise: Car repair",
+        text: "Your car fails inspection. You need $450 for repairs to stay on the road for work.",
+        options: [
+          {
+            id: "use-savings",
+            label: "Use the emergency savings I’ve been building.",
+            impact: +8,
+            explanation: "This is exactly what an emergency fund is for. You avoid new high-interest debt and keep working."
+          },
+          {
+            id: "card-minimum",
+            label: "Put it on a high-interest card and pay the minimum for now.",
+            impact: -10,
+            explanation: "It keeps you moving, but that balance will grow with interest if you only pay the minimum."
+          },
+          {
+            id: "skip-bill",
+            label: "Skip a regular bill this month and hope to catch up later.",
+            impact: -14,
+            explanation: "Skipping essential bills risks late fees, shutoffs, or late payments on your credit report."
+          }
+        ]
+      },
+      {
+        id: "medical-bill",
+        title: "Surprise: Medical bill",
+        text: "You receive an unexpected $300 medical bill after a clinic visit.",
+        options: [
+          {
+            id: "call-negotiate",
+            label: "Call the provider to request a payment plan or discount first.",
+            impact: +10,
+            explanation: "Advocating for yourself can lower the bill or spread it out — protecting your cash flow."
+          },
+          {
+            id: "pay-all-savings",
+            label: "Pay it all from savings immediately, even if it drains most of your cushion.",
+            impact: -2,
+            explanation: "Paying is responsible, but draining your entire cushion leaves you vulnerable to the next surprise."
+          },
+          {
+            id: "ignore-bill",
+            label: "Ignore it for now and hope they don’t send it to collections.",
+            impact: -15,
+            explanation: "Ignoring medical bills can eventually lead to collections and extra stress."
+          }
+        ]
+      },
+      {
+        id: "family-ask",
+        title: "Surprise: Family money request",
+        text: "A loved one asks to borrow $250 to cover their own emergency this month.",
+        options: [
+          {
+            id: "help-with-limits",
+            label: "Offer a smaller amount that still protects your essential bills and savings.",
+            impact: +6,
+            explanation: "You’re generous without putting your rent, food, or minimum payments at risk."
+          },
+          {
+            id: "give-it-all",
+            label: "Give them the full $250 even though it means no savings this month.",
+            impact: -6,
+            explanation: "Helping is kind, but if it cuts savings to zero, your own stability takes a hit."
+          },
+          {
+            id: "say-no-no-plan",
+            label: "Say no without offering any other kind of support or resource.",
+            impact: -3,
+            explanation: "Protecting your budget matters, but offering non-money help (rides, job leads, resources) can support them too."
+          }
+        ]
+      },
+      {
+        id: "rent-increase",
+        title: "Surprise: Rent increase",
+        text: "Your landlord raises the rent by $120/month starting next month.",
+        options: [
+          {
+            id: "adjust-budget",
+            label: "Trim fun money and a little from other non-essentials to fit the new rent.",
+            impact: +7,
+            explanation: "You protect housing — a top priority — by rebalancing instead of going negative each month."
+          },
+          {
+            id: "no-change",
+            label: "Don’t change anything and hope your account doesn’t overdraft.",
+            impact: -10,
+            explanation: "Ignoring a permanent increase can slowly push you into debt or overdrafts."
+          },
+          {
+            id: "move-quick",
+            label: "Decide to move immediately without a savings plan for moving costs.",
+            impact: -5,
+            explanation: "Moving can be smart long-term, but without a plan it can create new bills and stress."
+          }
+        ]
+      },
+      {
+        id: "bonus-pay",
+        title: "Good news: Extra income",
+        text: "You receive a $300 bonus at work this month.",
+        options: [
+          {
+            id: "split-bonus",
+            label: "Split it: some to savings, some to fun, some to extra debt payment.",
+            impact: +9,
+            explanation: "You enjoy a bit now but still strengthen savings and speed up debt payoff."
+          },
+          {
+            id: "all-fun",
+            label: "Spend the entire bonus on fun and impulse purchases.",
+            impact: -5,
+            explanation: "Enjoying a bonus is fine, but using none of it for future you misses a big opportunity."
+          },
+          {
+            id: "all-debt",
+            label: "Throw the entire bonus at debt even though you have no emergency fund.",
+            impact: -2,
+            explanation: "Aggressive debt payoff is good, but keeping $0 for emergencies can force you back onto credit later."
+          }
+        ]
+      }
+    ];
+
+    const stepIndicatorEl = document.getElementById("wgra-budget-step-indicator");
+    const mainCardEl = document.getElementById("wgra-budget-main-card");
+
+    const gameState = {
+      step: 1,
+      profileId: null,
+      income: 0,
+      categoryValues: {},
+      totalAllocated: 0,
+      savingsAmount: 0,
+      baseScore: 70,
+      budgetScoreDelta: 0,
+      eventScoreDelta: 0,      // cumulative over all questions
+      eventSequence: [],
+      questionIndex: 0,
+      notes: {
+        budget: [],
+        event: []
+      }
+    };
+    
+        // Prevent auto-scroll until the user interacts
+    let userInteracted = false;
+    ["click","touchstart","keydown","wheel"].forEach(evt => {
+      window.addEventListener(
+        evt,
+        () => { userInteracted = true; },
+        { once: true, passive: true }
+      );
+    });
+
+        function smoothScrollTo(el) {
+      if (!userInteracted) return; // stops the initial “drop”
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top + window.scrollY - 120;
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+
+    function formatMoney(num) {
+      return "$" + num.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    }
+
+    function updateStepIndicator() {
+      if (gameState.step === 1) {
+        stepIndicatorEl.textContent = "Step 1 of 3 — Choose a profile and monthly income";
+      } else if (gameState.step === 2) {
+        stepIndicatorEl.textContent = "Step 2 of 3 — Build your monthly budget";
+      } else if (gameState.step === 3) {
+        const qNum = gameState.questionIndex + 1;
+        stepIndicatorEl.textContent = "Step 3 — Money curveball " + qNum + " of " + TOTAL_QUESTIONS;
+      } else {
+        stepIndicatorEl.textContent = "Budget Builder Quest™ — Results";
+      }
+    }
+
+    function renderStep1() {
+      gameState.step = 1;
+      updateStepIndicator();
+
+      let profileCardsHtml = PROFILES.map(p => {
+        return `
+          <div class="wgra-budget-profile-card" data-profile-id="${p.id}">
+            <p class="wgra-budget-profile-name">${p.name}</p>
+            <p class="wgra-budget-profile-income">Suggested take-home: ${formatMoney(p.income)}/month</p>
+            <p class="wgra-budget-profile-desc">${p.desc}</p>
+          </div>
+        `;
+      }).join("");
+
+      const incomeValue = gameState.income || "";
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Pick a starting scenario</h3>
+          <p class="wgra-budget-section-copy">
+            Choose the profile that feels closest to you right now — or just pick one to practice.
+            You can also adjust the monthly take-home income below.
+          </p>
+
+          <div class="wgra-budget-profiles">
+            ${profileCardsHtml}
+          </div>
+
+          <div class="wgra-budget-income-row">
+            <label for="wgra-budget-income-input">Monthly take-home income:</label>
+            <input id="wgra-budget-income-input" class="wgra-budget-income-input" type="number" min="500" step="50" value="${incomeValue}" />
+          </div>
+          <div class="wgra-budget-income-note">
+            Take-home income is the amount that actually lands in your bank account after taxes and deductions.
+          </div>
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-reset-game">Reset</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-step1-next" disabled>Start building my budget</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const profileEls = mainCardEl.querySelectorAll(".wgra-budget-profile-card");
+      const incomeInput = document.getElementById("wgra-budget-income-input");
+      const nextBtn = document.getElementById("wgra-budget-step1-next");
+      const resetBtn = document.getElementById("wgra-budget-reset-game");
+
+      profileEls.forEach(el => {
+        el.addEventListener("click", () => {
+          const id = el.getAttribute("data-profile-id");
+          const profile = PROFILES.find(p => p.id === id);
+          if (!profile) return;
+
+          gameState.profileId = id;
+          gameState.income = profile.income;
+
+          incomeInput.value = profile.income;
+
+          profileEls.forEach(pEl => pEl.classList.remove("wgra-selected"));
+          el.classList.add("wgra-selected");
+
+          nextBtn.disabled = false;
+        });
+      });
+
+      incomeInput.addEventListener("input", () => {
+        const val = parseFloat(incomeInput.value || "0");
+        if (val >= 500) {
+          gameState.income = val;
+          nextBtn.disabled = false;
+        } else {
+          gameState.income = 0;
+          nextBtn.disabled = true;
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (gameState.income >= 500) {
+          renderStep2();
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        resetGame();
+      });
+
+      if (gameState.income >= 500) {
+        nextBtn.disabled = false;
+        profileEls.forEach(el => {
+          if (el.getAttribute("data-profile-id") === gameState.profileId) {
+            el.classList.add("wgra-selected");
+          }
+        });
+      }
+
+      smoothScrollTo(document.getElementById("wgra-budget-game-root"));
+    }
+
+    function renderStep2() {
+      gameState.step = 2;
+      updateStepIndicator();
+
+      if (!gameState.income || gameState.income < 500) {
+        gameState.income = 2600;
+      }
+
+      if (Object.keys(gameState.categoryValues).length === 0) {
+        CATEGORIES.forEach(cat => {
+          gameState.categoryValues[cat.id] = Math.round(gameState.income * cat.defaultPct);
+        });
+      }
+
+      const rowsHtml = CATEGORIES.map(cat => {
+        const value = gameState.categoryValues[cat.id] || 0;
+        const pct = (value / gameState.income) * 100 || 0;
+        return `
+          <div class="wgra-budget-category-label">
+            <div>${cat.label}</div>
+            <div class="wgra-budget-category-hint">${cat.hint}</div>
+          </div>
+          <div>
+            <input type="number" class="wgra-budget-number-input" min="0" step="10"
+              data-cat-id="${cat.id}" value="${value}">
+          </div>
+          <div class="wgra-budget-percentage" data-cat-pct="${cat.id}">
+            ${pct.toFixed(1)}%
+          </div>
+        `;
+      }).join("");
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Build your base monthly budget</h3>
+          <p class="wgra-budget-section-copy">
+            Use your take-home income to give every dollar a job. The goal is to cover essentials, protect savings,
+            and give fun money a clear limit.
+          </p>
+
+          <p class="wgra-budget-income-note">
+            Monthly take-home income: <strong>${formatMoney(gameState.income)}</strong>
+          </p>
+
+          <div class="wgra-budget-grid">
+            <div class="wgra-budget-grid-header">Category</div>
+            <div class="wgra-budget-grid-header">Amount</div>
+            <div class="wgra-budget-grid-header" style="text-align:right;">% of income</div>
+
+            ${rowsHtml}
+          </div>
+
+          <div class="wgra-budget-summary-row">
+            <div>
+              <span>Total allocated:</span>
+              <strong id="wgra-budget-total-allocated"></strong>
+              <span> / ${formatMoney(gameState.income)}</span>
+            </div>
+            <div class="wgra-budget-summary-status" id="wgra-budget-summary-status"></div>
+          </div>
+
+          <div class="wgra-budget-hints">
+            Aim for at least 10% toward savings and investing when possible. If money is tight, even 1–5% builds the
+            habit — the amount can grow later.
+          </div>
+
+          <div class="wgra-budget-alert" id="wgra-budget-alert"></div>
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-step2-back">Back</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-step2-next">Lock in this budget</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const inputs = mainCardEl.querySelectorAll(".wgra-budget-number-input");
+      const totalAllocatedEl = document.getElementById("wgra-budget-total-allocated");
+      const statusEl = document.getElementById("wgra-budget-summary-status");
+      const alertEl = document.getElementById("wgra-budget-alert");
+      const backBtn = document.getElementById("wgra-budget-step2-back");
+      const nextBtn = document.getElementById("wgra-budget-step2-next");
+
+      function recalcTotals() {
+        let total = 0;
+        inputs.forEach(inp => {
+          const id = inp.getAttribute("data-cat-id");
+          const val = parseFloat(inp.value || "0");
+          gameState.categoryValues[id] = isNaN(val) ? 0 : val;
+          total += gameState.categoryValues[id];
+        });
+
+        gameState.totalAllocated = total;
+        totalAllocatedEl.textContent = formatMoney(total);
+
+        const diff = gameState.income - total;
+        const diffAbs = Math.abs(diff);
+
+        statusEl.classList.remove("wgra-ok", "wgra-bad");
+        alertEl.textContent = "";
+
+        if (diff === 0) {
+          statusEl.textContent = "Every dollar has a job. Nice.";
+          statusEl.classList.add("wgra-ok");
+        } else if (diff > 0) {
+          statusEl.textContent = "You still have " + formatMoney(diff) + " unassigned.";
+          statusEl.classList.add("wgra-ok");
+        } else {
+          statusEl.textContent = "You are over budget by " + formatMoney(diffAbs) + ".";
+          statusEl.classList.add("wgra-bad");
+        }
+
+        CATEGORIES.forEach(cat => {
+          const amt = gameState.categoryValues[cat.id] || 0;
+          const pctEl = mainCardEl.querySelector('[data-cat-pct="' + cat.id + '"]');
+          if (pctEl) {
+            const pct = (amt / gameState.income) * 100 || 0;
+            pctEl.textContent = pct.toFixed(1) + "%";
+          }
+        });
+      }
+
+      inputs.forEach(inp => {
+        inp.addEventListener("input", recalcTotals);
+      });
+
+      recalcTotals();
+
+      backBtn.addEventListener("click", () => {
+        renderStep1();
+      });
+
+      nextBtn.addEventListener("click", () => {
+        recalcTotals();
+
+        const diff = gameState.income - gameState.totalAllocated;
+        if (diff < -1) {
+          alertEl.textContent = "You’re spending more than you bring in. Trim categories until you’re at or below your income.";
+          return;
+        }
+
+        evaluateBudget();
+        startQuestionPhase();
+      });
+
+      smoothScrollTo(document.getElementById("wgra-budget-game-root"));
+    }
+
+    function evaluateBudget() {
+      const housing = gameState.categoryValues["housing"] || 0;
+      const food = gameState.categoryValues["food"] || 0;
+      const transport = gameState.categoryValues["transport"] || 0;
+      const debt = gameState.categoryValues["debt"] || 0;
+      const savings = gameState.categoryValues["savings"] || 0;
+      const fun = gameState.categoryValues["fun"] || 0;
+
+      gameState.savingsAmount = savings;
+
+      const income = gameState.income || 1;
+
+      const savingsPct = (savings / income) * 100;
+      const essentialsPct = ((housing + food + transport + debt) / income) * 100;
+      const funPct = (fun / income) * 100;
+
+      let delta = 0;
+      const notes = [];
+
+      if (savingsPct >= 20) {
+        delta += 12;
+        notes.push("You’re sending a strong " + savingsPct.toFixed(1) + "% to savings/investing — future you approves.");
+      } else if (savingsPct >= 10) {
+        delta += 8;
+        notes.push("You’re hitting the classic 10%+ savings guideline. Great habit building.");
+      } else if (savingsPct >= 5) {
+        delta += 3;
+        notes.push("You’re starting with " + savingsPct.toFixed(1) + "% to savings. Small consistent amounts still build momentum.");
+      } else if (savingsPct > 0) {
+        delta -= 3;
+        notes.push("Savings is under 5%. If possible, try to slowly move dollars from fun into savings over time.");
+      } else {
+        delta -= 8;
+        notes.push("No money is going to savings yet. Even $10–$20 a month can start your safety net.");
+      }
+
+      if (essentialsPct <= 70) {
+        delta += 6;
+        notes.push("Essentials are at about " + essentialsPct.toFixed(1) + "% of income — that leaves breathing room for goals.");
+      } else if (essentialsPct <= 85) {
+        notes.push("Essentials take about " + essentialsPct.toFixed(1) + "% of income. It’s workable, but raises the stakes on tracking.");
+      } else {
+        delta -= 6;
+        notes.push("Essentials are eating " + essentialsPct.toFixed(1) + "% of income. Housing, food, or debt may need longer-term adjustments.");
+      }
+
+      if (funPct <= 15) {
+        delta += 4;
+        notes.push("Fun money is at " + funPct.toFixed(1) + "% — you’re keeping lifestyle creep under control.");
+      } else if (funPct <= 25) {
+        notes.push("Fun is around " + funPct.toFixed(1) + "% of income. Enjoy life, but keep an eye on subscriptions and impulse buys.");
+      } else {
+        delta -= 4;
+        notes.push("Fun and lifestyle are " + funPct.toFixed(1) + "% of income. Trimming here can free up savings or debt payoff power.");
+      }
+
+      if (debt > 0) {
+        notes.push("You’ve scheduled money for debt payments — that keeps accounts current and protects your credit.");
+      } else {
+        notes.push("You reported no debt payments. If that’s accurate, you’ve got more flexibility to direct money toward savings and goals.");
+      }
+
+      gameState.budgetScoreDelta = delta;
+      gameState.notes.budget = notes;
+    }
+
+    function startQuestionPhase() {
+      // Build a randomized sequence of events, repeating if needed to reach 5
+      const shuffled = EVENTS.slice().sort(() => Math.random() - 0.5);
+      const sequence = [];
+      let i = 0;
+      while (sequence.length < TOTAL_QUESTIONS) {
+        sequence.push(shuffled[i % shuffled.length]);
+        i++;
+      }
+      gameState.eventSequence = sequence;
+      gameState.questionIndex = 0;
+      gameState.eventScoreDelta = 0;
+      gameState.notes.event = [];
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      gameState.step = 3;
+      updateStepIndicator();
+
+      const event = gameState.eventSequence[gameState.questionIndex];
+      const projectedScore = gameState.baseScore + gameState.budgetScoreDelta + gameState.eventScoreDelta;
+
+      const budgetNotesList = gameState.notes.budget.map(n => "<li>" + n + "</li>").join("");
+
+      const isLast = (gameState.questionIndex === TOTAL_QUESTIONS - 1);
+      const buttonLabel = isLast ? "See my Money Health Score" : "Next question";
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Your budget is locked in — now life throws a curveball</h3>
+          <p class="wgra-budget-section-copy">
+            Based on your choices so far, your Money Health Score is trending around:
+            <span style="color:${projectedScore >= 75 ? 'var(--wgra-alert-good)' : 'var(--wgra-gold-soft)'}; font-weight:700;">
+              ${projectedScore}/100
+            </span>
+            before this question.
+          </p>
+
+          <div class="wgra-budget-event-box">
+            <div class="wgra-budget-event-title">${event.title}</div>
+            <div class="wgra-budget-event-text">
+              ${event.text}
+            </div>
+
+            <div class="wgra-budget-event-options" id="wgra-budget-event-options">
+              ${event.options.map(o => `
+                <button class="wgra-budget-event-option" data-option-id="${o.id}">
+                  ${o.label}
+                </button>
+              `).join("")}
+            </div>
+
+            <div class="wgra-budget-event-feedback" id="wgra-budget-event-feedback"></div>
+          </div>
+
+          <div>
+            <p class="wgra-budget-section-title" style="font-size:17px; margin-top:8px;">Quick reflection on your budget</p>
+            <ul class="wgra-budget-final-list">
+              ${budgetNotesList}
+            </ul>
+          </div>
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-step3-back">Back to budget</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-next-question" disabled>${buttonLabel}</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const optionsEl = document.getElementById("wgra-budget-event-options");
+      const feedbackEl = document.getElementById("wgra-budget-event-feedback");
+      const backBtn = document.getElementById("wgra-budget-step3-back");
+      const nextBtn = document.getElementById("wgra-budget-next-question");
+
+      let answered = false;
+
+      optionsEl.querySelectorAll(".wgra-budget-event-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (answered) return; // lock in first answer only
+          answered = true;
+
+          optionsEl.classList.add("wgra-locked");
+          optionsEl.querySelectorAll(".wgra-budget-event-option").forEach(b => b.classList.remove("wgra-selected"));
+
+          const optionId = btn.getAttribute("data-option-id");
+          const chosen = event.options.find(o => o.id === optionId);
+          if (!chosen) return;
+
+          btn.classList.add("wgra-selected");
+          gameState.eventScoreDelta += chosen.impact;
+
+          const label = chosen.impact >= 0 ? "Solid move" : "Risky move";
+
+          feedbackEl.innerHTML = "<strong>" + label + "</strong> — " + chosen.explanation;
+          gameState.notes.event.push(label + ": " + chosen.explanation);
+
+          nextBtn.disabled = false;
+
+          // Drop screen to show feedback clearly
+          smoothScrollTo(feedbackEl);
+        });
+      });
+
+      backBtn.addEventListener("click", () => {
+        renderStep2();
+      });
+      
+
+      nextBtn.addEventListener("click", () => {
+        if (!answered) return;
+        if (isLast) {
+          renderFinal();
+        } else {
+          gameState.questionIndex++;
+          renderQuestion();
+        }
+      });
+
+      smoothScrollTo(document.getElementById("wgra-budget-game-root"));
+    }
+
+    function renderFinal() {
+      gameState.step = 4;
+      updateStepIndicator();
+
+      const finalScore = gameState.baseScore + gameState.budgetScoreDelta + gameState.eventScoreDelta;
+      const clampedScore = Math.max(0, Math.min(100, finalScore));
+
+      let message;
+      if (clampedScore >= 90) {
+        message = "You’re running a championship-level budget. The habits you practice here can power real-world wealth.";
+      } else if (clampedScore >= 75) {
+        message = "You’ve built a strong foundation. A few tweaks — especially around savings and big fixed costs — can push you into elite territory.";
+      } else if (clampedScore >= 60) {
+        message = "You’re heading in the right direction. Tighten your plan, protect savings, and keep practicing smarter choices.";
+      } else {
+        message = "Budgets are skills, not personality tests. Every round you play is training your eye for better money decisions.";
+      }
+
+      const allNotes = []
+        .concat(gameState.notes.budget || [])
+        .concat(gameState.notes.event || []);
+
+      const notesList = allNotes.map(n => "<li>" + n + "</li>").join("");
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Your Budget Builder Quest™ results</h3>
+
+          <div style="text-align:center; margin-bottom:14px;">
+            <div class="wgra-budget-score-badge">
+              Money Health Score: ${clampedScore}/100
+            </div>
+            <p class="wgra-budget-final-copy">${message}</p>
+          </div>
+
+          <p class="wgra-budget-section-title" style="font-size:17px; margin-top:4px;">Highlights from this round</p>
+          <ul class="wgra-budget-final-list">
+            ${notesList}
+          </ul>
+
+          <div class="wgra-budget-end-message">
+            Every time you replay with different numbers or choices, you’re training your real-life budgeting instincts.
+          </div>
+
+          <div class="wgra-budget-controls" style="margin-top:20px;">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-play-again">Play again with a new budget</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-go-to-games">Explore other games</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const playAgainBtn = document.getElementById("wgra-budget-play-again");
+      const gamesBtn = document.getElementById("wgra-budget-go-to-games");
+
+      playAgainBtn.addEventListener("click", () => {
+        resetGame(false);
+      });
+
+      gamesBtn.addEventListener("click", () => {
+        window.location.href = "https://thewealthgapresolutionalgorithm.org/games/";
+      });
+
+      smoothScrollTo(document.getElementById("wgra-budget-game-root"));
+    }
+
+    function resetGame(fullReset = true) {
+      gameState.step = 1;
+      gameState.categoryValues = {};
+      gameState.totalAllocated = 0;
+      gameState.savingsAmount = 0;
+      gameState.budgetScoreDelta = 0;
+      gameState.eventScoreDelta = 0;
+      gameState.eventSequence = [];
+      gameState.questionIndex = 0;
+      gameState.notes.budget = [];
+      gameState.notes.event = [];
+
+      if (fullReset) {
+        gameState.profileId = null;
+        gameState.income = 0;
+      }
+
+      renderStep1();
+    }
+
+    // Start game
+    resetGame(false);
+  })();
+</script>
