@@ -3,66 +3,67 @@
 A free, open-source, offline-first Android educational app from
 **WGRALGO / The Wealth Gap Resolution Algorithm™ Inc.**
 
-Budget Builder Quest helps users practice building a monthly budget, responding
-to real-life financial curveballs, and understanding how each choice affects
-their **Money Health Score**.
+Budget Builder Quest lets you pick a life, build a monthly budget, and then
+live with it for **5 months of real-life curveballs**. Every choice changes
+your checking account, emergency fund, and credit card, and the game ends with
+a **Money Health Score**.
 
+- **Version:** 1.1.0
+- **Package:** `com.wgra.budgetbuilder2`
 - No accounts.
 - No ads.
 - No analytics or trackers.
 - No in-app purchases.
-- No internet permission — runs fully offline.
+- No internet permission. Runs fully offline.
 
 ---
 
 ## Features
 
-- **Three-step quest.** Pick a profile, build a monthly budget, then respond
-  to five randomized money curveballs.
-- **Money Health Score (0–100).** Updates after each choice. Final score
-  reflects budget structure plus event responses.
-- **Three sample profiles.** Student Starter, Early Career, Family Builder.
+- **Three steps.** Choose a life, build your monthly budget, then handle one
+  money curveball each month for 5 months.
+- **Three lives to practice with.** Student Starter, Early Career, and Family
+  Builder, each with real bills, minimums, debts, and last month's spending.
   Income is adjustable.
-- **Six budget categories.** Housing & utilities, food & household,
-  transportation, debt payments, savings & investing, fun & lifestyle.
-- **Realistic curveballs.** Car repair, medical bill, family money request,
-  rent increase, surprise bonus — each with three responses and an
-  explanation.
-- **Results screen.** Money Health Score, Income, Expenses, planned Savings,
-  Emergency-fund impact, and a list of what helped or hurt.
-- **Touch-first UI.** Large buttons, card layout, gold-on-black theme. Works
-  on phones and tablets in portrait orientation.
+- **A real budget.** Housing, food, transportation, phone, insurance,
+  childcare (Family Builder), debt payments, savings, fun, and giving. Every
+  bill has a realistic minimum, and you can't plan to spend more than you earn.
+- **29 curveballs.** Surprises, opportunities, and temptations, each with
+  several choices and an explanation. Some choices pay off or cost you in later
+  months.
+- **Real consequences.** Checking, emergency fund, 24% credit card interest,
+  overdraft and late fees, and a 401(k) all update month by month.
+- **Results.** A Money Health Score out of 100 for your budget plan, your
+  choices, and where you ended up, plus tips to take with you.
+- **Looks like a real app.** Black launch screen with the big logo, a new
+  launcher icon, a solid app bar, About / Privacy / Credits panels, and
+  Android back-button support (back steps out of the budget, asks before
+  leaving a quest, and asks before exiting the app).
 
 ---
 
 ## Screenshots
 
-Captured at a 412×915 phone viewport from the same HTML/CSS/JS that ships
+Captured at a 393×852 phone viewport from the same HTML/CSS/JS that ships
 inside the Android WebView. Stored in [`screenshots/`](./screenshots/).
 
-| Landing | How It Works | Pick a profile |
+| Launch | Home | Pick a life |
 | :---: | :---: | :---: |
-| ![Landing](./screenshots/01-landing.png) | ![How It Works modal](./screenshots/02-how-it-works.png) | ![Step 1 — pick profile](./screenshots/03-step1-profile.png) |
+| ![Launch](./screenshots/01-splash.png) | ![Home](./screenshots/02-home.png) | ![Pick a life](./screenshots/03-pick-life.png) |
 
-| Build a budget | Money curveball | Feedback after a choice |
+| Build a budget | Money curveball | Feedback |
 | :---: | :---: | :---: |
-| ![Step 2 — build budget](./screenshots/04-step2-budget.png) | ![Step 3 — curveball](./screenshots/05-step3-curveball.png) | ![Step 3 — feedback](./screenshots/06-step3-feedback.png) |
+| ![Build a budget](./screenshots/04-budget.png) | ![Curveball](./screenshots/05-curveball.png) | ![Feedback](./screenshots/06-feedback.png) |
 
-| Results — Money Health Score | Tablet landing | Launcher icon (no white square) |
+| Results | Menu | About |
 | :---: | :---: | :---: |
-| ![Results](./screenshots/07-results.png) | ![Tablet landing](./screenshots/08-tablet-landing.png) | ![Launcher icon](./screenshots/09-launcher-icon.png) |
-
-Full-page scroll of the results screen, including the *What helped or hurt*
-notes list, lives at
-[`screenshots/07b-results-full.png`](./screenshots/07b-results-full.png).
-The splash screen as rendered by Android lives at
-[`screenshots/10-splash.png`](./screenshots/10-splash.png).
+| ![Results](./screenshots/07-results.png) | ![Menu](./screenshots/08-menu.png) | ![About](./screenshots/09-about.png) |
 
 ---
 
 ## Install (sideload the APK)
 
-1. Download `WGRALGO_Budget_Builder_Quest_v1.0.1.apk` from the
+1. Download `WGRALGO_Budget_Builder_Quest_v1.1.0.apk` from the
    [Releases](https://github.com/WGRALGO/WGRALGO-Budget-Builder-Quest/releases)
    page.
 2. On your Android device, allow install from unknown sources for your file
@@ -71,10 +72,21 @@ The splash screen as rendered by Android lives at
 4. (Optional) Verify the download with the published SHA-256 hash:
 
    ```bash
-   sha256sum -c WGRALGO_Budget_Builder_Quest_v1.0.1.apk.sha256
+   sha256sum -c WGRALGO_Budget_Builder_Quest_v1.1.0.apk.sha256
    ```
 
-Minimum Android version: as configured by the project's Capacitor toolchain.
+> **Upgrading from v1.0.0 or v1.0.1?** Version 1.1.0 is signed with a new key,
+> so it can't install over the old app. Uninstall the old version first, then
+> install v1.1.0. The app saves nothing on your device, so nothing is lost.
+
+### Signing certificate (v1.1.0 and later)
+
+- `CN=WGRALGO, OU=Budget Builder Quest, O=The Wealth Gap Resolution Algorithm Inc, C=US`
+- SHA-256: `05:09:30:71:1A:43:6D:D4:8A:DE:4D:B9:E3:D3:DB:8A:65:E5:DC:18:62:18:78:E5:B7:4E:7A:AE:06:E3:DA:77`
+
+```bash
+apksigner verify --print-certs WGRALGO_Budget_Builder_Quest_v1.1.0.apk
+```
 
 ---
 
@@ -109,36 +121,35 @@ keyPassword=...
 ```
 
 When this file is present, the `release` build type is signed with that
-keystore. When absent, gradle still builds an unsigned release APK.
+keystore. The env vars `BBQ_KEYSTORE_FILE`, `BBQ_KEYSTORE_PASSWORD`,
+`BBQ_KEY_ALIAS`, and `BBQ_KEY_PASSWORD` work too. Without either, gradle
+still builds an unsigned release APK.
 
-### Regenerating icon and splash
-
-Source assets live at `assets/icon.png` (1024×1024) and `assets/splash.png`
-(2732×2732). After changing them, regenerate Android resources with:
+Check a build before publishing:
 
 ```bash
-npx capacitor-assets generate --android \
-  --iconBackgroundColor "#000000" \
-  --iconBackgroundColorDark "#000000" \
-  --splashBackgroundColor "#000000" \
-  --splashBackgroundColorDark "#000000"
+bash tools/validate-release.sh android/app/build/outputs/apk/release/app-release.apk
 ```
 
-The launcher background is forced to `#000000` in
-`android/app/src/main/res/values/ic_launcher_background.xml` so the adaptive
-icon shows the logo on black — no white square.
+### Icon and splash
+
+The launcher icon, the Android 12+ system splash (`drawable-nodpi/splash_icon.jpg`),
+and the legacy `splash.png` files all show the big logo on solid black, sized
+to stay inside round, squircle, and square icon masks. The in-app logo is
+`www/logo.jpg`.
 
 ---
 
-## Continuous integration
+## Continuous integration and releases
 
-Every push to `main` triggers
-[`.github/workflows/android.yml`](./.github/workflows/android.yml), which
-builds a **debug** APK on `ubuntu-latest` and uploads it as the
-`budget-builder-quest-debug` artifact.
-
-Signed **release** APKs are built locally with the WGRALGO release keystore
-and uploaded to GitHub Releases manually.
+- [`.github/workflows/android.yml`](./.github/workflows/android.yml) builds a
+  **debug** APK on every push and pull request and uploads it as the
+  `budget-builder-quest-debug` artifact.
+- [`.github/workflows/release.yml`](./.github/workflows/release.yml) builds,
+  validates, signs, and publishes `WGRALGO_Budget_Builder_Quest_v<version>.apk`
+  with its `.sha256` to GitHub Releases. Run it from the **Actions** tab or
+  push a `v*` tag. It needs these repository secrets: `BBQ_KEYSTORE_BASE64`,
+  `BBQ_KEYSTORE_PASSWORD`, `BBQ_KEY_ALIAS`, `BBQ_KEY_PASSWORD`.
 
 ---
 
