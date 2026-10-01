@@ -1,1005 +1,2542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' 'unsafe-inline' data:; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'self';" />
-  <meta name="theme-color" content="#000000" />
-  <title>Budget Builder Quest</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none';">
+<meta name="theme-color" content="#000000">
+<title>Budget Builder Quest</title>
+<!-- Budget Builder Quest — Android app build.
+     Game: the WGRA website version, wrapped in an app shell.
+     No cookies, no trackers, no outside files, nothing saved on the device. -->
+<style>
+  :root {
+    --wgra-gold: #d4af37;
+    --wgra-gold-soft: #fbe79a;
+    --wgra-gold-deep: #b07a12;
+    --wgra-bg-deep: #050505;
+    --wgra-text-main: #fdfaf0;
+    --wgra-text-soft: #f5e4b3;
+    --wgra-alert-bad: #ff6b6b;
+    --wgra-alert-good: #31e27f;
+  }
 
-  <style>
-    :root {
-      --gold:        #d4af37;
-      --gold-soft:   #fbe79a;
-      --gold-deep:   #b07a12;
-      --bg:          #000000;
-      --bg-card:     #0a0a0a;
-      --bg-elev:     #111111;
-      --text:        #fdfaf0;
-      --text-soft:   #f5e4b3;
-      --text-muted:  #c8b888;
-      --good:        #31e27f;
-      --bad:         #ff6b6b;
-      --safe-top:    env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
+  #wgra-budget-game-root {
+    background: radial-gradient(circle at top, #181818 0%, #050505 60%);
+    padding: 40px 16px 70px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--wgra-text-main);
+  }
 
-    *, *::before, *::after { box-sizing: border-box; }
+  .wgra-budget-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      -webkit-text-size-adjust: 100%;
-      overscroll-behavior: none;
-      min-height: 100vh;
-    }
+  .wgra-budget-header {
+    text-align: center;
+    margin-bottom: 26px;
+  }
 
-    body {
-      padding: calc(var(--safe-top) + 8px) 0 calc(var(--safe-bottom) + 8px);
-    }
+  .wgra-budget-title {
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wgra-gold-soft);
+    margin: 0 0 8px;
+  }
 
-    button { font-family: inherit; }
+  .wgra-budget-subtitle {
+    font-size: 16px;
+    color: var(--wgra-text-soft);
+    max-width: 720px;
+    margin: 0 auto;
+  }
 
-    .app {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+  .wgra-budget-divider {
+    width: 180px;
+    height: 4px;
+    margin: 18px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--wgra-gold-deep),
+      var(--wgra-gold-soft),
+      var(--wgra-gold),
+      var(--wgra-gold-soft),
+      var(--wgra-gold-deep)
+    );
+    background-size: 260% 260%;
+    animation: wgra-budget-gold-flow 7s linear infinite;
+  }
 
-    /* ----- LANDING SCREEN ----- */
-    .landing {
-      min-height: calc(100vh - var(--safe-top) - var(--safe-bottom) - 16px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px 8px;
-    }
+  @keyframes wgra-budget-gold-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    .logo-wrap {
-      width: min(58vw, 240px);
-      aspect-ratio: 1 / 1;
-      border-radius: 28px;
-      border: 1px solid rgba(212,175,55,0.55);
-      background: radial-gradient(circle at top, #1a1a1a 0%, #050505 70%);
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.85),
-        0 24px 60px rgba(0,0,0,0.95),
-        0 0 40px rgba(212,175,55,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      margin-bottom: 22px;
-    }
-    .logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  /* BIGGER, BOLDER STEP INDICATOR */
+  .wgra-budget-step-indicator {
+    text-align: center;
+    margin-bottom: 22px;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--wgra-gold-soft);
+    padding: 8px 10px;
+    border-top: 1px solid rgba(245,210,106,0.45);
+    border-bottom: 1px solid rgba(245,210,106,0.45);
+    background: rgba(0,0,0,0.65);
+  }
 
-    .app-title {
-      font-size: clamp(26px, 7vw, 36px);
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: var(--gold-soft);
-      margin: 0 0 6px;
-      text-transform: uppercase;
-    }
+  .wgra-budget-main-card {
+    border-radius: 24px;
+    border: 1px solid rgba(245,210,106,0.55);
+    background: radial-gradient(circle at top left, rgba(245,210,106,0.2), #050505 55%);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 22px 50px rgba(0,0,0,0.95);
+    padding: 22px 22px 20px;
+  }
 
-    .app-title-mark {
-      font-size: 0.55em;
-      vertical-align: top;
-      color: var(--gold);
-    }
+  .wgra-budget-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--wgra-gold-soft);
+    margin: 0 0 12px;
+  }
 
-    .app-tagline {
-      font-size: clamp(14px, 3.6vw, 16px);
-      color: var(--text-soft);
-      max-width: 30em;
-      margin: 0 auto 28px;
-      line-height: 1.45;
-    }
+  .wgra-budget-section-copy {
+    font-size: 14px;
+    color: var(--wgra-text-soft);
+    margin-bottom: 18px;
+  }
 
-    .divider {
-      width: 140px;
-      height: 3px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft), var(--gold), var(--gold-soft), var(--gold-deep));
-      margin: 0 auto 26px;
-    }
+  /* PROFILE CARDS */
+  .wgra-budget-profiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+  }
 
-    .cta-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 360px;
-    }
+  .wgra-budget-profile-card {
+    border-radius: 18px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(5,5,5,0.9);
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 52px;
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border-radius: 16px;
-      border: 1px solid rgba(212,175,55,0.85);
-      cursor: pointer;
-      transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.9);
-    }
-    .btn:active { transform: translateY(1px); }
-    .btn[disabled] { opacity: 0.45; cursor: default; transform: none; }
+  .wgra-budget-profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.9);
+    border-color: var(--wgra-gold-soft);
+  }
 
-    .btn-primary {
-      background: radial-gradient(circle at top, #fbe79a 0%, #d4af37 45%, #b07a12 100%);
-      color: #1b1303;
-    }
-    .btn-primary:hover { filter: brightness(1.06); }
+  .wgra-budget-profile-card.wgra-selected {
+    border-color: var(--wgra-alert-good);
+    box-shadow: 0 0 0 1px rgba(49,226,127,0.5), 0 14px 30px rgba(0,0,0,0.95);
+    background: radial-gradient(circle at top, rgba(49,226,127,0.22), #050505 70%);
+  }
 
-    .btn-secondary {
-      background: var(--bg-card);
-      color: var(--text-soft);
-    }
-    .btn-secondary:hover {
-      border-color: var(--gold-soft);
-      box-shadow: 0 0 0 1px rgba(212,175,55,0.4), 0 12px 30px rgba(0,0,0,0.9);
-    }
+  .wgra-budget-profile-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
 
-    .footer-credit {
-      margin-top: 36px;
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      text-align: center;
-      opacity: 0.9;
-    }
-    .footer-credit strong { color: var(--text-soft); font-weight: 600; }
+  .wgra-budget-profile-income {
+    font-size: 14px;
+    color: var(--wgra-gold-soft);
+    margin-bottom: 6px;
+  }
 
-    /* ----- HOW IT WORKS MODAL ----- */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 100;
-    }
-    .modal-backdrop[hidden] { display: none; }
-    .modal {
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.55);
-      border-radius: 22px;
-      max-width: 480px;
-      width: 100%;
-      padding: 22px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.95);
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .modal h2 {
-      margin: 0 0 12px;
-      font-size: 20px;
-      color: var(--gold-soft);
-      letter-spacing: 0.04em;
-    }
-    .modal p, .modal li {
-      font-size: 14px;
-      color: var(--text-soft);
-      line-height: 1.55;
-    }
-    .modal ul { padding-left: 18px; margin: 8px 0 14px; }
-    .modal .btn { margin-top: 10px; }
+  .wgra-budget-profile-desc {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
 
-    /* ----- GAME VIEW ----- */
-    .game { display: none; padding: 12px 0 24px; }
-    .game.active { display: block; }
+  .wgra-budget-income-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
 
-    .step-pill {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold-soft);
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.5);
-      border-radius: 999px;
-      padding: 8px 14px;
-      margin: 4px auto 16px;
-      display: inline-block;
-    }
-    .step-pill-wrap { text-align: center; }
+  .wgra-budget-income-row label {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 4px 0 14px;
-    }
-    .topbar .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--gold-soft);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .topbar .brand img {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid rgba(212,175,55,0.55);
-    }
-    .icon-btn {
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.55);
-      color: var(--text-soft);
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 700;
-    }
-    .icon-btn:hover { border-color: var(--gold-soft); }
+  .wgra-budget-income-input {
+    background: rgba(0,0,0,0.8);
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.7);
+    padding: 6px 10px;
+    color: var(--wgra-text-main);
+    font-size: 14px;
+    width: 130px;
+  }
 
-    .card {
-      border-radius: 22px;
-      border: 1px solid rgba(212,175,55,0.55);
-      background: radial-gradient(circle at top left, rgba(212,175,55,0.15), #050505 60%);
-      padding: 20px 18px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.9);
-      margin-bottom: 14px;
-    }
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: var(--gold-soft);
-      letter-spacing: 0.02em;
-    }
-    .card p { margin: 0 0 14px; color: var(--text-soft); font-size: 14px; line-height: 1.5; }
+  .wgra-budget-income-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(245,210,106,0.9);
+  }
 
-    /* Profiles */
-    .profiles {
-      display: grid;
+  .wgra-budget-income-note {
+    font-size: 12px;
+    color: var(--wgra-text-soft);
+    opacity: 0.9;
+    margin-bottom: 4px;
+  }
+
+  /* BUDGET TABLE */
+  .wgra-budget-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px 12px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .wgra-budget-grid-header {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--wgra-text-soft);
+    opacity: 0.9;
+  }
+
+  .wgra-budget-category-label {
+    font-size: 14px;
+    color: var(--wgra-text-main);
+  }
+
+  .wgra-budget-category-hint {
+    font-size: 11px;
+    color: var(--wgra-text-soft);
+    opacity: 0.85;
+  }
+
+  .wgra-budget-number-input {
+    width: 100%;
+    background: rgba(0,0,0,0.85);
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.7);
+    padding: 6px 10px;
+    color: var(--wgra-text-main);
+    font-size: 13px;
+  }
+
+  .wgra-budget-number-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(245,210,106,0.9);
+  }
+
+  .wgra-budget-percentage {
+    font-size: 13px;
+    text-align: right;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .wgra-budget-summary-row strong {
+    color: var(--wgra-gold-soft);
+  }
+
+  .wgra-budget-summary-status {
+    font-size: 13px;
+  }
+
+  .wgra-budget-summary-status.wgra-ok {
+    color: var(--wgra-alert-good);
+  }
+
+  .wgra-budget-summary-status.wgra-bad {
+    color: var(--wgra-alert-bad);
+  }
+
+  .wgra-budget-alert {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--wgra-alert-bad);
+  }
+
+  .wgra-budget-hints {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--wgra-text-soft);
+  }
+
+  /* EVENT + SCORE SECTIONS */
+  .wgra-budget-event-box {
+    border-radius: 20px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(5,5,5,0.88);
+    padding: 14px 14px 12px;
+    margin-bottom: 14px;
+  }
+
+  .wgra-budget-event-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--wgra-gold-soft);
+    margin-bottom: 6px;
+  }
+
+  .wgra-budget-event-text {
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-event-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  /* FORCE TEXT VISIBLE IN OPTION BOXES */
+  .wgra-budget-event-option {
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.6);
+    background: rgba(0,0,0,0.85);
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: left;
+    color: var(--wgra-text-main);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease,
+                border-color 0.12s ease, background 0.12s ease;
+  }
+
+  .wgra-budget-event-option:hover {
+    transform: translateY(-1px);
+    border-color: var(--wgra-gold-soft);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.9);
+  }
+
+  .wgra-budget-event-options.wgra-locked .wgra-budget-event-option {
+    pointer-events: none;
+  }
+
+  .wgra-budget-event-option.wgra-selected {
+    border-color: var(--wgra-alert-good);
+    background: radial-gradient(circle at top, rgba(49,226,127,0.25), #050505 80%);
+    box-shadow: 0 0 0 1px rgba(49,226,127,0.4), 0 12px 26px rgba(0,0,0,0.9);
+  }
+
+  .wgra-budget-event-feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-event-feedback strong {
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+
+  /* HIGH-CONTRAST SCORE BADGE */
+  .wgra-budget-score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.9);
+    background: radial-gradient(circle at top, #181818 0%, #050505 70%);
+    color: var(--wgra-gold-soft);
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 10px 26px rgba(0,0,0,0.9);
+    margin-bottom: 8px;
+  }
+
+  .wgra-budget-final-copy {
+    font-size: 14px;
+    color: var(--wgra-text-soft);
+    margin-bottom: 10px;
+  }
+
+  .wgra-budget-final-list {
+    margin: 8px 0 0 16px;
+    font-size: 13px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-final-list li {
+    margin-bottom: 3px;
+  }
+
+  .wgra-budget-end-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--wgra-gold-soft);
+  }
+
+  /* BUTTON ROW */
+  .wgra-budget-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .wgra-budget-btn,
+  .wgra-budget-btn-secondary {
+    border-radius: 999px;
+    border: 1px solid rgba(245,210,106,0.8);
+    padding: 9px 22px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.85),
+      0 10px 24px rgba(0,0,0,0.9);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
+  }
+
+  .wgra-budget-btn {
+    background: radial-gradient(circle at top, #fbe79a 0%, #d4af37 45%, #b07a12 100%);
+    color: #1b1303;
+  }
+
+  .wgra-budget-btn-secondary {
+    background: rgba(0,0,0,0.85);
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-btn:hover,
+  .wgra-budget-btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 12px 28px rgba(0,0,0,0.95);
+    filter: brightness(1.05);
+  }
+
+  .wgra-budget-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.7),
+      0 6px 16px rgba(0,0,0,0.75);
+  }
+
+  .wgra-budget-controls-left,
+  .wgra-budget-controls-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 800px) {
+    .wgra-budget-profiles {
       grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 18px;
     }
-    @media (min-width: 520px) {
-      .profiles { grid-template-columns: repeat(3, 1fr); }
-    }
-    .profile {
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.45);
-      border-radius: 16px;
-      padding: 14px;
-      cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-    }
-    .profile:active { transform: scale(0.99); }
-    .profile.selected {
-      border-color: var(--good);
-      box-shadow: 0 0 0 1px rgba(49,226,127,0.4), 0 12px 26px rgba(0,0,0,0.9);
-      background: radial-gradient(circle at top, rgba(49,226,127,0.18), #050505 70%);
-    }
-    .profile h4 { margin: 0 0 4px; font-size: 15px; color: var(--text); }
-    .profile .income { font-size: 13px; color: var(--gold-soft); margin-bottom: 6px; }
-    .profile .desc   { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+  }
 
-    /* Income input */
-    .field-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
+  @media (max-width: 640px) {
+    .wgra-budget-main-card {
+      padding: 18px 14px 18px;
     }
-    .field-row label {
-      font-size: 13px;
-      color: var(--text-soft);
-      letter-spacing: 0.04em;
+    .wgra-budget-grid {
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1fr);
     }
-    .field-input {
-      background: var(--bg-elev);
-      color: var(--text);
-      border: 1px solid rgba(212,175,55,0.6);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 16px;
-      width: 100%;
-      min-height: 48px;
+    .wgra-budget-title {
+      font-size: 26px;
     }
-    .field-input:focus {
-      outline: none;
-      border-color: var(--gold-soft);
-      box-shadow: 0 0 0 2px rgba(212,175,55,0.25);
-    }
-    .field-hint { font-size: 12px; color: var(--text-muted); }
+  }
+  #wgra-budget-game-root {
+    font-size: 16px;
+  }
 
-    /* Budget rows */
-    .budget-row {
-      display: grid;
-      grid-template-columns: 1fr 110px;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(212,175,55,0.18);
-    }
-    .budget-row:last-child { border-bottom: none; }
-    .budget-row .cat-label { font-size: 14px; color: var(--text); }
-    .budget-row .cat-hint  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .budget-row .cat-pct   { font-size: 11px; color: var(--gold-soft); margin-top: 4px; }
-    .budget-row input {
-      background: var(--bg-elev);
-      color: var(--text);
-      border: 1px solid rgba(212,175,55,0.55);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 15px;
-      width: 100%;
-      min-height: 44px;
-      text-align: right;
-    }
-    .budget-row input:focus {
-      outline: none;
-      border-color: var(--gold-soft);
-      box-shadow: 0 0 0 2px rgba(212,175,55,0.25);
-    }
+  .wgra-budget-section-copy,
+  .wgra-budget-event-text,
+  .wgra-budget-event-feedback,
+  .wgra-budget-final-copy,
+  .wgra-budget-final-list {
+    font-size: 15px;
+    line-height: 1.6;
+  }
 
-    .summary {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.4);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .summary-line { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-    .summary-line strong { color: var(--gold-soft); }
-    .summary-status.ok  { color: var(--good); font-weight: 600; }
-    .summary-status.bad { color: var(--bad);  font-weight: 600; }
+  .wgra-budget-profile-desc {
+    font-size: 14px;
+    line-height: 1.5;
+  }
 
-    .alert { color: var(--bad); font-size: 13px; margin-top: 10px; }
-    .hint  { color: var(--text-muted); font-size: 12px; margin-top: 10px; line-height: 1.4; }
+  .wgra-budget-profile-facts {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--wgra-text-main);
+  }
 
-    /* Event options */
-    .event-options { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-    .event-option {
-      width: 100%;
-      text-align: left;
-      background: var(--bg-card);
-      color: var(--text);
-      border: 1px solid rgba(212,175,55,0.5);
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 14px;
-      line-height: 1.45;
-      min-height: 52px;
-      cursor: pointer;
-      transition: transform 0.1s ease, border-color 0.12s ease, background 0.12s ease;
-    }
-    .event-option:active { transform: scale(0.99); }
-    .event-options.locked .event-option { pointer-events: none; opacity: 0.7; }
-    .event-option.selected {
-      border-color: var(--good);
-      background: radial-gradient(circle at top, rgba(49,226,127,0.22), #050505 70%);
-      opacity: 1;
-    }
-    .event-option.bad {
-      border-color: var(--bad);
-      background: radial-gradient(circle at top, rgba(255,107,107,0.18), #050505 70%);
-      opacity: 1;
-    }
-    .event-feedback {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: var(--bg-elev);
-      border: 1px solid rgba(212,175,55,0.4);
-      font-size: 13px;
-      color: var(--text-soft);
-      line-height: 1.5;
-    }
-    .event-feedback strong { color: var(--gold-soft); display: block; margin-bottom: 4px; }
+  .wgra-budget-profile-facts li {
+    margin-bottom: 2px;
+  }
 
-    /* Score badge / results */
-    .score-card {
-      text-align: center;
-      padding: 22px 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(212,175,55,0.55);
-      background: radial-gradient(circle at top, #161616 0%, #050505 70%);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.95);
+  .wgra-budget-profile-card:focus-visible,
+  .wgra-budget-event-option:focus-visible,
+  .wgra-budget-btn:focus-visible,
+  .wgra-budget-btn-secondary:focus-visible {
+    outline: 2px solid var(--wgra-gold-soft);
+    outline-offset: 2px;
+  }
+
+  .wgra-budget-category-label {
+    font-size: 15px;
+  }
+
+  .wgra-budget-category-hint {
+    font-size: 12px;
+  }
+
+  .wgra-budget-min {
+    font-size: 12px;
+    color: var(--wgra-gold-soft);
+    margin-top: 2px;
+  }
+
+  .wgra-budget-number-input {
+    font-size: 15px;
+    box-sizing: border-box;
+  }
+
+  .wgra-budget-number-input.wgra-too-low {
+    border-color: var(--wgra-alert-bad);
+    box-shadow: 0 0 0 1px rgba(255,107,107,0.8);
+  }
+
+  .wgra-budget-summary-row {
+    font-size: 15px;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(245,210,106,0.3);
+  }
+
+  .wgra-budget-summary-status,
+  .wgra-budget-alert,
+  .wgra-budget-hints {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .wgra-budget-alert:empty {
+    display: none;
+  }
+
+  .wgra-budget-lastmonth {
+    border-radius: 14px;
+    border: 1px dashed rgba(245,210,106,0.6);
+    background: rgba(245,210,106,0.06);
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--wgra-text-soft);
+    margin-bottom: 16px;
+  }
+
+  /* DASHBOARD TILES */
+  .wgra-budget-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .wgra-budget-tile {
+    border-radius: 14px;
+    border: 1px solid rgba(245,210,106,0.45);
+    background: rgba(0,0,0,0.7);
+    padding: 10px 12px;
+  }
+
+  .wgra-budget-tile-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-tile-value {
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--wgra-text-main);
+    margin-top: 2px;
+  }
+
+  .wgra-budget-tile-value.wgra-neg {
+    color: var(--wgra-alert-bad);
+  }
+
+  .wgra-budget-tile-note {
+    font-size: 12px;
+    color: var(--wgra-text-soft);
+    opacity: 0.9;
+  }
+
+  .wgra-budget-recap {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--wgra-text-soft);
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-left: 3px solid rgba(245,210,106,0.8);
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+  }
+
+  .wgra-budget-recap strong {
+    color: var(--wgra-gold-soft);
+  }
+
+  .wgra-budget-recap .wgra-bad-text {
+    color: var(--wgra-alert-bad);
+    font-weight: 700;
+  }
+
+  .wgra-budget-kind {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #3b2b0a, #8c6d23);
+    color: #fff4c4;
+  }
+
+  .wgra-budget-event-title {
+    font-size: 18px;
+  }
+
+  .wgra-budget-event-option {
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .wgra-budget-event-option:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .wgra-budget-event-option small {
+    display: block;
+    font-size: 12px;
+    color: var(--wgra-alert-bad);
+    margin-top: 2px;
+  }
+
+  .wgra-budget-event-option.wgra-best-reveal {
+    border-color: var(--wgra-gold-soft);
+    border-style: dashed;
+  }
+
+  .wgra-budget-verdict-best { color: var(--wgra-alert-good); }
+  .wgra-budget-verdict-ok { color: var(--wgra-gold-soft); }
+  .wgra-budget-verdict-bad { color: var(--wgra-alert-bad); }
+
+  .wgra-budget-changes {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+
+  .wgra-budget-plan {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--wgra-text-soft);
+  }
+
+  .wgra-budget-plan summary {
+    cursor: pointer;
+    color: var(--wgra-gold-soft);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .wgra-budget-plan-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 16px;
+    margin-top: 8px;
+    max-width: 420px;
+  }
+
+  .wgra-budget-plan-grid .wgra-r {
+    text-align: right;
+  }
+
+  /* RESULTS */
+  .wgra-budget-breakdown {
+    display: grid;
+    gap: 10px;
+    margin: 12px 0 18px;
+  }
+
+  .wgra-budget-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .wgra-budget-bar {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+
+  .wgra-budget-bar span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #b07a12, #fbe79a);
+  }
+
+  .wgra-budget-compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .wgra-budget-compare th,
+  .wgra-budget-compare td {
+    color: var(--wgra-text-main);
+    font-size: inherit;
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(245,210,106,0.2);
+    text-align: right;
+  }
+
+  .wgra-budget-compare th:first-child,
+  .wgra-budget-compare td:first-child {
+    text-align: left;
+  }
+
+  .wgra-budget-compare th {
+    color: var(--wgra-text-soft) !important;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .wgra-budget-lessons {
+    border-radius: 16px;
+    border: 1px solid rgba(49,226,127,0.5);
+    background: rgba(49,226,127,0.07);
+    padding: 12px 16px;
+    margin: 14px 0;
+  }
+
+  .wgra-budget-lessons ol {
+    margin: 6px 0 0 18px;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .wgra-budget-lessons li {
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 800px) {
+    .wgra-budget-tiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .score-label {
+  }
+
+  @media (max-width: 640px) {
+    .wgra-budget-grid {
+      grid-template-columns: minmax(0, 1fr) 96px 52px;
+      gap: 8px;
+    }
+    .wgra-budget-grid-header {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+    .wgra-budget-percentage {
       font-size: 12px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin-bottom: 8px;
     }
-    .score-value {
-      font-size: clamp(48px, 14vw, 72px);
-      font-weight: 800;
-      color: var(--gold-soft);
-      letter-spacing: 0.02em;
-      line-height: 1;
-    }
-    .score-value .of { font-size: 0.35em; color: var(--text-muted); margin-left: 4px; }
-    .score-bar {
-      height: 10px;
-      border-radius: 999px;
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.4);
-      overflow: hidden;
-      margin: 14px auto 10px;
-      max-width: 280px;
-    }
-    .score-bar > span {
-      display: block;
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-soft));
-      transition: width 0.5s ease;
-    }
-    .score-msg { font-size: 14px; color: var(--text-soft); line-height: 1.5; }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 16px 0 8px;
-    }
-    .stat {
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 14px;
-      padding: 12px 14px;
-    }
-    .stat .stat-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-    .stat .stat-value { font-size: 18px; font-weight: 700; color: var(--gold-soft); margin-top: 2px; }
-    .stat .stat-value.good { color: var(--good); }
-    .stat .stat-value.bad  { color: var(--bad); }
-
-    .notes-list {
-      list-style: none;
-      padding: 0;
-      margin: 8px 0 0;
-    }
-    .notes-list li {
-      padding: 10px 12px;
-      background: var(--bg-card);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 12px;
-      margin-bottom: 8px;
+    .wgra-budget-step-indicator {
       font-size: 13px;
-      color: var(--text-soft);
-      line-height: 1.45;
+      letter-spacing: 0.08em;
     }
+    .wgra-budget-tile-value {
+      font-size: 18px;
+    }
+    .wgra-budget-controls {
+      flex-direction: column-reverse;
+    }
+    .wgra-budget-controls-left,
+    .wgra-budget-controls-right,
+    .wgra-budget-controls button {
+      width: 100%;
+    }
+    .wgra-budget-compare {
+      font-size: 13px;
+    }
+  }
 
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .controls .btn { flex: 1; min-height: 50px; font-size: 14px; }
+  /* ================= ANDROID APP SHELL ================= */
+  :root { --bar-h: 56px; --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    background: #000;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Pure black so the logo's black background blends in (no visible box). */
+  #wgra-budget-game-root { background: #000; padding: calc(var(--bar-h) + var(--safe-top) + 14px) 12px calc(28px + var(--safe-bottom)); min-height: 100vh; }
+  #wgra-budget-game-root .wgra-budget-shell { max-width: 820px; }
+  
+  
 
-    @media (max-width: 380px) {
-      .stat-grid { grid-template-columns: 1fr; }
-      .budget-row { grid-template-columns: 1fr 90px; }
-    }
-  </style>
+  .app-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+    padding-top: var(--safe-top);
+    background: #000;
+    border-bottom: 1px solid rgba(212,175,55,0.25);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .app-bar-row { height: var(--bar-h); max-width: 820px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 0 6px 0 12px; }
+  .app-bar-logo { width: 36px; height: 36px; border-radius: 8px; }
+  .app-bar-title { flex: 1; min-width: 0; font-size: 19px; font-weight: 800; color: #fbe79a; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .icon-btn { width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  .icon-btn:active { background: rgba(255,255,255,0.1); }
+  .icon-btn svg { width: 24px; height: 24px; fill: #fdfaf0; }
+
+  /* Setup hero: big logo, shown only on the setup screen */
+  .app-hero { display: none; text-align: center; margin: 4px 0 18px; }
+  #wgra-budget-game-root.is-first .app-hero { display: block; }
+  .app-hero img { width: min(64vw, 260px); height: min(64vw, 260px); }
+  .app-hero p { margin: 10px auto 0; max-width: 560px; font-size: 16px; line-height: 1.5; color: #f5e4b3; }
+
+  /* Bottom sheets: menu, tips, help, about, privacy, credits */
+  .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,0.6); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    max-width: 820px; margin: 0 auto; max-height: 85vh; overflow-y: auto;
+    background: #1a1a1a; border-radius: 24px 24px 0 0; border-top: 1px solid rgba(212,175,55,0.4);
+    padding: 10px 20px calc(24px + var(--safe-bottom));
+    transform: translateY(105%); transition: transform .3s cubic-bezier(.2,.8,.2,1);
+    color: #fdfaf0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .sheet.open { transform: none; }
+  .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: #555; margin: 0 auto 14px; }
+  .sheet h3 { margin: 0 0 10px; font-size: 21px; color: #fbe79a; }
+  .sheet p, .sheet li { font-size: 15px; line-height: 1.6; color: #e8e4d6; }
+  .sheet ul { padding-left: 20px; margin: 0 0 10px; }
+  .sheet .muted { color: rgba(253,250,240,0.6); font-size: 14px; }
+  .sheet-close {
+    display: block; width: 100%; margin-top: 14px; min-height: 50px; border: 0; border-radius: 14px;
+    background: #2a2a2a; color: #fbe79a; font: inherit; font-size: 16px; font-weight: 800; cursor: pointer;
+  }
+  .menu-item { display: flex; align-items: center; gap: 16px; width: 100%; padding: 14px 6px; border: 0; background: transparent; color: #fdfaf0; font: inherit; font-size: 16px; text-align: left; cursor: pointer; border-radius: 12px; }
+  .menu-item:active { background: rgba(255,255,255,0.06); }
+  .menu-item svg { width: 22px; height: 22px; fill: #d4af37; flex: none; }
+
+  /* Intro splash: the big logo while the app opens */
+  .app-splash { position: fixed; inset: 0; z-index: 100; background: #000; display: flex; align-items: center; justify-content: center; transition: opacity .45s ease; }
+  .app-splash img { width: min(80vw, 80vh, 520px); height: min(80vw, 80vh, 520px); animation: app-splash-in .6s ease both; }
+  .app-splash.out { opacity: 0; pointer-events: none; }
+  @keyframes app-splash-in { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .app-splash, .app-splash img, .sheet, .scrim { animation: none; transition: none; } }
+</style>
 </head>
 <body>
+<div id="app-splash" class="app-splash" aria-hidden="true"><img src="logo.jpg" alt=""></div>
 
-  <!-- LANDING SCREEN -->
-  <main id="screen-landing" class="app landing">
-    <div class="logo-wrap">
-      <img src="logo.png" alt="Budget Builder Quest logo" />
-    </div>
-    <h1 class="app-title">Budget Builder Quest<span class="app-title-mark">™</span></h1>
-    <p class="app-tagline">
-      Build a monthly budget, survive money curveballs, and improve your Money Health Score.
-    </p>
-    <div class="divider"></div>
-    <div class="cta-stack">
-      <button class="btn btn-primary" id="btn-start">Start Quest</button>
-      <button class="btn btn-secondary" id="btn-how">How It Works</button>
-    </div>
-    <p class="footer-credit">
-      <strong>&copy; 2026 The Wealth Gap Resolution Algorithm&trade; Inc.</strong><br/>
-      Educational use only &middot; No ads &middot; No trackers &middot; No in-app purchases
-    </p>
-  </main>
+<header class="app-bar">
+  <div class="app-bar-row">
+    <img class="app-bar-logo" src="logo.jpg" alt="">
+    <div class="app-bar-title">Budget Builder Quest</div>
+    <button type="button" class="icon-btn" data-sheet="sheet-menu" aria-label="More options"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg></button>
+  </div>
+</header>
 
-  <!-- GAME VIEW -->
-  <main id="screen-game" class="app game">
-    <div class="topbar">
-      <div class="brand">
-        <img src="logo.png" alt="" aria-hidden="true" />
-        <span>Budget Builder Quest</span>
-      </div>
-      <button class="icon-btn" id="btn-home" aria-label="Back to start">&#8592;</button>
+<div id="wgra-budget-game-root">
+  <div class="wgra-budget-shell">
+    <div class="app-hero">
+      <img src="logo.jpg" alt="Budget Builder Quest logo">
+      <p>
+        Build a monthly budget, live with it for 5 months of real-life curveballs, and see how your choices
+        impact your Money Health Score.
+      </p>
     </div>
-    <div class="step-pill-wrap">
-      <div class="step-pill" id="step-pill">Step 1 of 3 — Pick a profile</div>
-    </div>
-    <div class="card" id="main-card"></div>
-  </main>
 
-  <!-- HOW IT WORKS MODAL -->
-  <div class="modal-backdrop" id="modal-how" hidden>
-    <div class="modal">
-      <h2>How Budget Builder Quest works</h2>
-      <p>Three quick steps. Every choice nudges your Money Health Score between 0 and 100.</p>
-      <ul>
-        <li><strong>Step 1.</strong> Pick a profile and confirm your monthly take-home income.</li>
-        <li><strong>Step 2.</strong> Split that income across housing, food, transport, debt, savings, and fun.</li>
-        <li><strong>Step 3.</strong> Five money curveballs hit. You choose how to respond.</li>
-      </ul>
-      <p>Your final results show your Money Health Score, savings, emergency-fund impact, and what helped or hurt.</p>
-      <p>Everything stays on your device. No accounts, no internet, no tracking.</p>
-      <button class="btn btn-primary" id="btn-how-close">Got it</button>
+    <div class="wgra-budget-step-indicator" id="wgra-budget-step-indicator"></div>
+
+    <div class="wgra-budget-main-card" id="wgra-budget-main-card" aria-live="polite">
+      <!-- Dynamic content injected by JavaScript -->
     </div>
   </div>
+</div>
 
-  <script>
-    (function() {
-      "use strict";
+<div id="scrim" class="scrim"></div>
 
-      var TOTAL_QUESTIONS = 5;
+<div id="sheet-menu" class="sheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="sheet-handle"></div>
+  <button type="button" class="menu-item" data-sheet="sheet-about"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>About</button>
+  <button type="button" class="menu-item" data-sheet="sheet-privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>Privacy</button>
+  <button type="button" class="menu-item" data-sheet="sheet-credits"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Credits</button>
+</div>
 
-      var PROFILES = [
-        { id: "student",       name: "Student Starter", income: 1600, desc: "Part-time job + classes. Roommates or dorm, tight but workable." },
-        { id: "young-earner",  name: "Early Career",    income: 2600, desc: "First full-time job. Rent, transport, and student loans in the mix." },
-        { id: "steady-family", name: "Family Builder",  income: 3800, desc: "Household with kids or shared bills. More moving pieces." }
-      ];
+<div id="sheet-about" class="sheet" role="dialog" aria-modal="true" aria-label="About">
+  <div class="sheet-handle"></div>
+  <h3>About</h3>
+  <p>Budget Builder Quest is a free money game from WGRALGO / The Wealth Gap Resolution Algorithm™ Inc. Pick a life, build a monthly budget, then live with it for 5 months of real-life curveballs and see your Money Health Score.</p>
+  <h3>How it works</h3>
+  <ul>
+    <li><strong>Step 1:</strong> Choose a life to practice with.</li>
+    <li><strong>Step 2:</strong> Build your monthly budget. You can’t spend more than you earn.</li>
+    <li><strong>Step 3:</strong> Handle a money curveball each month and watch your checking, emergency fund, and credit card.</li>
+  </ul>
+  <p class="muted">The amounts are simplified examples for learning. This is not financial advice.</p>
+  <p class="muted">Budget Builder Quest v1.1.0</p>
+  <button type="button" class="sheet-close" data-close>Close</button>
+</div>
 
-      var CATEGORIES = [
-        { id: "housing",   label: "Housing & utilities", hint: "Rent, mortgage, lights, heat",            defaultPct: 0.30 },
-        { id: "food",      label: "Food & household",    hint: "Groceries, basics, essentials",           defaultPct: 0.15 },
-        { id: "transport", label: "Transportation",      hint: "Metro, gas, ride shares",                 defaultPct: 0.10 },
-        { id: "debt",      label: "Debt payments",       hint: "Cards, loans, buy-now-pay-later",         defaultPct: 0.10 },
-        { id: "savings",   label: "Savings & investing", hint: "Emergency fund, investing, sinking funds", defaultPct: 0.15 },
-        { id: "fun",       label: "Fun & lifestyle",     hint: "Streaming, outings, hobbies",             defaultPct: 0.20 }
-      ];
+<div id="sheet-privacy" class="sheet" role="dialog" aria-modal="true" aria-label="Privacy">
+  <div class="sheet-handle"></div>
+  <h3>Privacy</h3>
+  <p>This app works offline and doesn’t save anything on your device. It does not collect personal data.</p>
+  <ul>
+    <li>No ads</li>
+    <li>No account</li>
+    <li>No analytics, cookies, or trackers</li>
+    <li>No internet permission</li>
+  </ul>
+  <button type="button" class="sheet-close" data-close>Close</button>
+</div>
 
-      var EVENTS = [
-        { id: "car-repair", title: "Surprise: Car repair", text: "Your car fails inspection. You need $450 for repairs to stay on the road for work.", emergencyHit: 450, options: [
-          { id: "use-savings",   label: "Use the emergency savings I've been building.",                          impact: +8,  explanation: "Exactly what an emergency fund is for. You avoid high-interest debt and keep working." },
-          { id: "card-minimum",  label: "Put it on a high-interest card and pay only the minimum for now.",       impact: -10, explanation: "It keeps you moving, but the balance grows quickly with interest." },
-          { id: "skip-bill",     label: "Skip a regular bill this month and hope to catch up later.",             impact: -14, explanation: "Skipping essentials risks late fees, shutoffs, and credit hits." }
-        ]},
-        { id: "medical-bill", title: "Surprise: Medical bill", text: "You receive an unexpected $300 medical bill after a clinic visit.", emergencyHit: 300, options: [
-          { id: "call-negotiate", label: "Call the provider to request a payment plan or discount first.",        impact: +10, explanation: "Advocating for yourself can lower the bill or spread it out — protecting cash flow." },
-          { id: "pay-all-savings",label: "Pay it all from savings immediately, even if it drains most of your cushion.", impact: -2,  explanation: "Paying is responsible, but draining your cushion leaves you exposed to the next surprise." },
-          { id: "ignore-bill",    label: "Ignore it for now and hope they don't send it to collections.",        impact: -15, explanation: "Ignoring medical bills can lead to collections and extra stress." }
-        ]},
-        { id: "family-ask", title: "Surprise: Family money request", text: "A loved one asks to borrow $250 to cover their own emergency this month.", emergencyHit: 250, options: [
-          { id: "help-with-limits", label: "Offer a smaller amount that still protects your essential bills and savings.", impact: +6, explanation: "Generous without risking rent, food, or your minimum payments." },
-          { id: "give-it-all",      label: "Give them the full $250 even though it means no savings this month.",         impact: -6, explanation: "Kind, but if it zeroes out your savings, your own stability takes a hit." },
-          { id: "say-no-no-plan",   label: "Say no without offering any other kind of support or resource.",              impact: -3, explanation: "Protecting your budget matters, but non-money help (rides, job leads) can still go far." }
-        ]},
-        { id: "rent-increase", title: "Surprise: Rent increase", text: "Your landlord raises the rent by $120/month starting next month.", emergencyHit: 0, options: [
-          { id: "adjust-budget", label: "Trim fun money and a little from other non-essentials to fit the new rent.", impact: +7,  explanation: "You protect housing — a top priority — by rebalancing." },
-          { id: "no-change",     label: "Don't change anything and hope your account doesn't overdraft.",            impact: -10, explanation: "Ignoring a permanent increase quietly pushes you into debt or overdrafts." },
-          { id: "move-quick",    label: "Decide to move immediately without a savings plan for moving costs.",       impact: -5,  explanation: "Moving can be smart, but no plan creates new bills and stress." }
-        ]},
-        { id: "bonus-pay", title: "Good news: Extra income", text: "You receive a $300 bonus at work this month.", emergencyHit: -300, options: [
-          { id: "split-bonus", label: "Split it: some to savings, some to fun, some to extra debt payment.", impact: +9,  explanation: "Enjoy a bit now, strengthen savings, and speed up debt payoff." },
-          { id: "all-fun",     label: "Spend the entire bonus on fun and impulse purchases.",               impact: -5,  explanation: "Enjoying a bonus is fine, but using none for future you misses an opportunity." },
-          { id: "all-debt",    label: "Throw the entire bonus at debt even though you have no emergency fund.", impact: -2, explanation: "Aggressive debt payoff is good, but $0 emergency fund forces you back onto credit." }
-        ]}
-      ];
+<div id="sheet-credits" class="sheet" role="dialog" aria-modal="true" aria-label="Credits">
+  <div class="sheet-handle"></div>
+  <h3>Credits</h3>
+  <ul>
+    <li><strong>WGRALGO</strong> — Project owner, concept, direction, testing, and publishing.</li>
+    <li><strong>ChatGPT</strong> — Original web game assistance.</li>
+    <li><strong>Claude Code</strong> — Android app build, packaging, and GitHub project setup.</li>
+  </ul>
+  <p class="muted">Free and open source under the GNU General Public License v3.0. Made by WGRALGO / The Wealth Gap Resolution Algorithm™ Inc.</p>
+  <button type="button" class="sheet-close" data-close>Close</button>
+</div>
 
-      var screens = {
-        landing: document.getElementById("screen-landing"),
-        game:    document.getElementById("screen-game")
-      };
-      var stepPill = document.getElementById("step-pill");
-      var mainCard = document.getElementById("main-card");
-      var modalHow = document.getElementById("modal-how");
+<script>
+  (function() {
+    const TOTAL_QUESTIONS = 5;
+    const OVERDRAFT_FEE = 35;
+    const START_CHECKING = 150;
 
-      var state = {
-        step: 1,
-        profileId: null,
-        income: 0,
-        categoryValues: {},
-        totalAllocated: 0,
-        savingsAmount: 0,
-        emergencyFund: 0,
-        baseScore: 70,
-        budgetScoreDelta: 0,
-        eventScoreDelta: 0,
-        eventSequence: [],
-        questionIndex: 0,
-        notes: { budget: [], event: [] }
-      };
-
-      function show(name) {
-        Object.keys(screens).forEach(function(k) {
-          screens[k].classList.toggle("active", k === name);
-          screens[k].style.display = (k === name) ? (k === "game" ? "block" : "flex") : "none";
-        });
-        window.scrollTo(0, 0);
+    /* ---------------------------------------------------------------
+       PROFILES
+       min       = the lowest realistic amount for each category
+                   (bills you can't skip, or a bare-minimum grocery budget)
+       lastMonth = what this person actually spent last month
+                   (on purpose, it's a little over budget with no savings)
+    ---------------------------------------------------------------- */
+    const PROFILES = [
+      {
+        id: "student",
+        name: "Student Starter",
+        income: 1600,
+        desc: "Part-time job + classes. Shares an apartment with a roommate and takes the bus.",
+        fund: 150,
+        card: 700,
+        cardMin: 35,
+        otherDebt: 0,
+        otherDebtLabel: "",
+        min:       { housing: 600, food: 250, transport: 60, phone: 45, health: 25, kids: 0, debt: 35, savings: 0, fun: 0, giving: 0 },
+        lastMonth: { housing: 600, food: 380, transport: 90, phone: 45, health: 25, kids: 0, debt: 35, savings: 0, fun: 450, giving: 0 }
+      },
+      {
+        id: "early",
+        name: "Early Career",
+        income: 2600,
+        desc: "First full-time job. Rents a studio, drives to work, and pays a student loan.",
+        fund: 400,
+        card: 1800,
+        cardMin: 45,
+        otherDebt: 200,
+        otherDebtLabel: "$200 student loan",
+        min:       { housing: 1000, food: 300, transport: 180, phone: 60, health: 60, kids: 0, debt: 245, savings: 0, fun: 0, giving: 0 },
+        lastMonth: { housing: 1000, food: 450, transport: 250, phone: 60, health: 60, kids: 0, debt: 245, savings: 0, fun: 600, giving: 0 }
+      },
+      {
+        id: "family",
+        name: "Family Builder",
+        income: 4800,
+        desc: "Two adults and two kids. Rent, childcare, a car, and a lot of moving pieces.",
+        fund: 800,
+        card: 2500,
+        cardMin: 60,
+        otherDebt: 0,
+        otherDebtLabel: "",
+        min:       { housing: 1500, food: 700, transport: 350, phone: 120, health: 200, kids: 500, debt: 60, savings: 0, fun: 0, giving: 0 },
+        lastMonth: { housing: 1500, food: 1000, transport: 450, phone: 120, health: 200, kids: 500, debt: 60, savings: 0, fun: 1000, giving: 0 }
       }
-      // initial display state
-      screens.landing.style.display = "flex";
-      screens.game.style.display = "none";
+    ];
 
-      document.getElementById("btn-start").addEventListener("click", function() {
-        resetGame(true);
-        show("game");
-      });
-      document.getElementById("btn-home").addEventListener("click", function() {
-        show("landing");
-      });
-      document.getElementById("btn-how").addEventListener("click", function() {
-        modalHow.hidden = false;
-      });
-      document.getElementById("btn-how-close").addEventListener("click", function() {
-        modalHow.hidden = true;
-      });
-      modalHow.addEventListener("click", function(e) {
-        if (e.target === modalHow) modalHow.hidden = true;
-      });
+    const CATEGORIES = [
+      { id: "housing",   label: "Housing & utilities", hint: "Rent, lights, heat, water",               minLabel: "Rent + utilities" },
+      { id: "food",      label: "Food & household",    hint: "Groceries, toiletries, cleaning supplies", minLabel: "Bare minimum" },
+      { id: "transport", label: "Transportation",      hint: "Bus pass, gas, car insurance",             minLabel: "Bare minimum" },
+      { id: "phone",     label: "Phone & internet",    hint: "Cell phone, home internet",                minLabel: "Your plan" },
+      { id: "health",    label: "Insurance & medical", hint: "Health premiums, prescriptions, copays",   minLabel: "Your premiums" },
+      { id: "kids",      label: "Childcare & kids",    hint: "Daycare, school costs, activities",        minLabel: "Childcare bill", only: ["family"] },
+      { id: "debt",      label: "Debt payments",       hint: "",                                         minLabel: "Minimum payments" },
+      { id: "savings",   label: "Savings",             hint: "Goes into your emergency fund each month" },
+      { id: "fun",       label: "Fun & lifestyle",     hint: "Eating out, streaming, hobbies, shopping" },
+      { id: "giving",    label: "Giving & gifts",      hint: "Church, charity, birthdays, holidays" }
+    ];
 
-      function money(n) {
-        return "$" + Math.round(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+    const CAT_LABEL = {};
+    CATEGORIES.forEach(c => { CAT_LABEL[c.id] = c.label; });
+
+    /* ---------------------------------------------------------------
+       CURVEBALLS
+       kind:  "surprise", "good" (good news / opportunity), "temptation"
+       who:   which profiles can get it (leave out = everyone)
+
+       Option effects (all optional):
+         fund:     + / − emergency fund   (a negative fund amount means the
+                   option is only available if the fund has that much)
+         checking: + / − checking account
+         card:     + / − credit card balance
+         fee:      a late or overdraft fee (paid from checking, counts as a fee)
+         raise:    { category: amount }  monthly budget goes up
+         cut:      { amount, from: [categories] }  monthly budget goes down
+         shift:    { amount, from: [categories], to: category }  move money
+         income:   monthly take-home pay changes by this amount
+         retire:   monthly amount going into a 401(k)
+         cardZero: true  → 0% interest on the card for the rest of the game
+         cardFeePct: balance transfer fee (e.g. 0.03)
+         later:    [ {...}, {...} ]  effects that happen in the next months
+         points:   0–10 (how good the choice is)
+    ---------------------------------------------------------------- */
+    const CURVEBALLS = [
+
+      /* ---------- SURPRISES (everyone) ---------- */
+      {
+        id: "medical", kind: "surprise",
+        title: "Unexpected medical bill",
+        text: "A $300 bill arrives from a clinic visit two months ago. It's due in 30 days.",
+        options: [
+          { label: "Call the billing office, ask for an itemized bill and whether you qualify for financial assistance, then set up a payment plan.",
+            points: 10, later: [{ checking: -55 }, { checking: -55 }, { checking: -55 }, { checking: -55 }],
+            why: "Medical bills often contain errors, and many providers offer discounts or no-interest payment plans. Here, they removed an $80 error and split the rest into 4 payments of $55." },
+          { label: "Pay the full $300 from your emergency fund right away.",
+            points: 7, fund: -300,
+            why: "Paying on time is responsible, but checking the bill first could have saved you money. Billing errors are common." },
+          { label: "Put it on your credit card so your savings stay untouched.",
+            points: 3, card: 300,
+            why: "Medical offices usually offer no-interest payment plans. Moving the bill to a card turns 0% debt into 24% debt." },
+          { label: "Set it aside for now and wait to see if insurance ends up covering more.",
+            points: 2, later: [{}, { fee: 35, checking: -300 }],
+            why: "Waiting without calling led to a $35 late fee, and you still had to pay the full $300. Unpaid medical bills can eventually go to collections." }
+        ]
+      },
+      {
+        id: "family-loan", kind: "surprise",
+        title: "A loved one needs help",
+        text: "Your cousin asks to borrow $250 to cover their electric bill this month. They promise to pay you back.",
+        options: [
+          { label: "Give $100 as a gift (not a loan), taking it from this month's fun money.",
+            points: 10,
+            why: "You helped without touching your bills or savings. Giving only what you can afford to lose protects both your money and the relationship." },
+          { label: "Say no to money, but help in other ways — share the utility's assistance program and the 211 helpline.",
+            points: 8,
+            why: "Protecting your budget is okay. Pointing them to real help (utility payment plans, 211, energy assistance programs) can solve the problem too." },
+          { label: "Lend the full $250 from your emergency fund, with a payback date written down.",
+            points: 5, fund: -250, later: [{}, {}, { fund: 125 }],
+            why: "Writing it down was smart, but they only paid back $125. Loans to family often come back late or not at all — lend only what you could afford to give." },
+          { label: "Take a $250 cash advance on your credit card to lend them the money.",
+            points: 1, card: 263,
+            why: "Cash advances charge a fee right away (here, $13) and usually a higher interest rate that starts immediately." }
+        ]
+      },
+      {
+        id: "rent-up", kind: "surprise",
+        title: "Rent increase",
+        text: "Your landlord says rent is going up $100 a month when your lease renews next month.",
+        options: [
+          { label: "Offer to sign a 12-month lease if they keep the increase to $50, then cut $50 from fun money.",
+            points: 10, raise: { housing: 50 }, cut: { amount: 50, from: ["fun", "giving"] },
+            why: "Landlords often prefer a reliable tenant over finding a new one. Asking cost nothing and saved $600 a year." },
+          { label: "Accept the $100 increase and cut $100 from fun and giving.",
+            points: 8, raise: { housing: 100 }, cut: { amount: 100, from: ["fun", "giving"] },
+            why: "You protected your housing and your savings by changing the budget right away. Asking for a smaller increase might have saved even more." },
+          { label: "Accept the $100 increase and stop saving $100 a month to cover it.",
+            points: 4, raise: { housing: 100 }, cut: { amount: 100, from: ["savings", "fun"] },
+            why: "Rent is covered, but your emergency fund stops growing. Cut wants (fun) before cutting your safety net." },
+          { label: "Accept the increase and keep the rest of your budget the same.",
+            points: 1, raise: { housing: 100 },
+            why: "Your plan now spends $100 more than you earn each month. That gap comes out of checking and can lead to overdraft fees." }
+        ]
+      },
+      {
+        id: "hours-cut", kind: "surprise",
+        title: "Hours cut at work",
+        text: "Business is slow. Your hours are cut, and your take-home pay drops by $200 a month for the foreseeable future.",
+        options: [
+          { label: "Pick up a weekend side gig (+$150/month) and cut $50 from fun.",
+            points: 10, income: -50, cut: { amount: 50, from: ["fun", "giving"] },
+            why: "You replaced most of the lost income and adjusted the rest. Acting quickly keeps a small problem from becoming a big one." },
+          { label: "Cut $200 from fun and giving until your hours come back.",
+            points: 9, income: -200, cut: { amount: 200, from: ["fun", "giving", "savings"] },
+            why: "You matched your spending to your new income right away. That's the key move when pay drops." },
+          { label: "Stop saving until your hours come back.",
+            points: 5, income: -200, cut: { amount: 200, from: ["savings", "fun"] },
+            why: "Your bills are covered, but you stopped building your safety net right when your job looks less stable." },
+          { label: "Keep your budget as it is — your manager said hours might come back next month.",
+            points: 1, income: -200,
+            why: "\"Might\" isn't a plan. You spent $200 more than you earned every month, and the gap came out of checking." }
+        ]
+      },
+      {
+        id: "phone-crack", kind: "surprise",
+        title: "Cracked phone screen",
+        text: "You drop your phone. The screen cracks, but it still works. A repair costs $250.",
+        options: [
+          { label: "Put on a $15 screen protector and move $40 a month from fun to savings for your next phone.",
+            points: 10, checking: -15, shift: { amount: 40, from: ["fun"], to: "savings" },
+            why: "The phone still works, so this isn't an emergency. Saving ahead for a known future cost is called a \"sinking fund.\"" },
+          { label: "Pay for the $250 repair from your emergency fund.",
+            points: 6, fund: -250,
+            why: "Okay if you need the phone for work, but a phone that still works is more of a want than an emergency." },
+          { label: "Pay for the repair with your credit card.",
+            points: 4, card: 250,
+            why: "The repair can wait, and now it's collecting interest at 24%." },
+          { label: "Upgrade to the newest phone for \"just\" $45 a month for 36 months.",
+            points: 2, raise: { phone: 45 },
+            why: "That's $1,620 over three years, and your budget didn't include it, so it came out of checking each month." }
+        ]
+      },
+      {
+        id: "utility", kind: "surprise",
+        title: "High winter utility bill",
+        text: "A cold snap makes your electric bill $200 higher than normal. It's due Friday.",
+        options: [
+          { label: "Call the utility and ask for a payment arrangement, plus \"budget billing\" to even out future bills.",
+            points: 10, later: [{ checking: -100 }, { checking: -100 }],
+            why: "Most utilities offer payment arrangements and budget billing. Many areas also have energy assistance programs. One phone call spread the cost with no fees." },
+          { label: "Pay the extra $200 from your emergency fund.",
+            points: 8, fund: -200,
+            why: "A reasonable use of the fund. Asking about a payment arrangement first could have kept your cushion whole." },
+          { label: "Pay it with your credit card (the utility charges a $3 card fee).",
+            points: 4, card: 203,
+            why: "It's paid on time, but now it's growing at 24% interest, plus a convenience fee." },
+          { label: "Take a $200 payday loan and repay $230 in two weeks.",
+            points: 1, later: [{ checking: -230 }],
+            why: "That $30 fee on a two-week loan works out to an annual rate of about 390%. Payday loans often trap people in a cycle of new loans." }
+        ]
+      },
+      {
+        id: "overdraft", kind: "surprise",
+        title: "Overdraft fee",
+        text: "A subscription renewed the day before payday, and your bank charged a $35 overdraft fee.",
+        options: [
+          { label: "Call the bank, politely ask them to waive it since it's your first, and set up low-balance text alerts.",
+            points: 10,
+            why: "Banks often waive a first overdraft fee if you ask. Alerts help keep it from happening again." },
+          { label: "Pay the fee, cancel two subscriptions you rarely use, and move the $25/month into savings.",
+            points: 8, fee: 35, shift: { amount: 25, from: ["fun"], to: "savings" },
+            why: "Great long-term fix, but asking for a waiver first might have saved the $35 too." },
+          { label: "Pay the fee and move on — it's only $35.",
+            points: 3, fee: 35,
+            why: "$35 here and there adds up fast. Asking for a waiver and setting alerts takes 10 minutes." },
+          { label: "Close the account and open one at a new bank this week.",
+            points: 4, fee: 35,
+            why: "Switching to a bank with no overdraft fees can be smart, but rushing risks missed automatic payments. Ask for a waiver first, then switch carefully." }
+        ]
+      },
+      {
+        id: "vet", kind: "surprise",
+        title: "Pet emergency",
+        text: "Your dog eats something it shouldn't. The emergency vet bill is $600.",
+        options: [
+          { label: "Pay from your emergency fund.",
+            points: 10, fund: -600,
+            why: "This is exactly what an emergency fund is for. No new debt, no fees." },
+          { label: "Ask the vet about a payment plan and pay $150 a month for 4 months.",
+            points: 8, later: [{ checking: -150 }, { checking: -150 }, { checking: -150 }, { checking: -150 }],
+            why: "Many vets offer plans. Good move — just make sure the payments fit your budget." },
+          { label: "Sign up for a medical credit card with \"no interest if paid in full in 6 months.\"",
+            points: 3, card: 600,
+            why: "Careful: with \"deferred interest,\" if any balance is left after 6 months, ALL the interest from day one gets added. For this game it counts as credit card debt." },
+          { label: "Put it on your regular credit card.",
+            points: 4, card: 600,
+            why: "The pet gets care, but $600 at 24% interest takes a long time to pay off at minimum payments." }
+        ]
+      },
+      {
+        id: "fraud", kind: "surprise",
+        title: "Mystery charge",
+        text: "You check your bank app and see a $300 debit card charge you didn't make.",
+        options: [
+          { label: "Call your bank right away, report it, lock your card, and change your online banking password.",
+            points: 10, checking: -300, later: [{ checking: 300 }],
+            why: "Reporting quickly limits what you can lose under federal rules. The bank returned your $300 within about 10 days." },
+          { label: "Lock the card in the app and report the charge in a few days if it doesn't go away.",
+            points: 4, checking: -300, later: [{ checking: 250 }],
+            why: "Waiting can cost you. Report within 2 business days to limit your loss to $50 — here, you lost $50." },
+          { label: "Wait a week to see if more charges show up before calling.",
+            points: 1, checking: -300, later: [{}, { checking: 0 }],
+            why: "The fraud kept going and the bank could not return this charge. Always report unauthorized charges immediately." }
+        ]
+      },
+
+      /* ---------- SURPRISES (specific profiles) ---------- */
+      {
+        id: "car-repair", kind: "surprise", who: ["early", "family"],
+        title: "Car repair",
+        text: "Your car fails inspection. The shop quotes $450 to fix it, and you need the car for work.",
+        options: [
+          { label: "Get a second quote ($380 at another trusted shop) and pay from your emergency fund.",
+            points: 10, fund: -380,
+            why: "Getting a second quote on big repairs often saves money. You paid in cash with no new debt." },
+          { label: "Pay the $450 from your emergency fund right away.",
+            points: 8, fund: -450,
+            why: "This is what the fund is for. A second quote might have saved you some money." },
+          { label: "Split it into 4 \"buy now, pay later\" payments of about $113.",
+            points: 5, checking: -113, later: [{ checking: -113 }, { checking: -113 }, { checking: -112 }],
+            why: "No interest, but the payments come out of checking over the next months. Missed payments bring late fees." },
+          { label: "Put it on your credit card and pay it off when you can.",
+            points: 3, card: 450,
+            why: "\"When I can\" often turns into months of 24% interest." }
+        ]
+      },
+      {
+        id: "car-insurance", kind: "surprise", who: ["early", "family"],
+        title: "Car insurance renewal",
+        text: "Your car insurance renewal notice says your bill is going up $40 a month.",
+        options: [
+          { label: "Get quotes from 3 companies. You find the same coverage for only $15 more, and cut $15 from fun.",
+            points: 10, raise: { transport: 15 }, cut: { amount: 15, from: ["fun", "giving"] },
+            why: "Insurance prices vary a lot between companies. Shopping around once a year can save hundreds." },
+          { label: "Accept the $40 increase and cut $40 from fun.",
+            points: 7, raise: { transport: 40 }, cut: { amount: 40, from: ["fun", "giving"] },
+            why: "You adjusted your budget right away — good. Comparing quotes could have saved $25 a month." },
+          { label: "Drop to your state's minimum coverage to keep the price the same.",
+            points: 3,
+            why: "Minimum coverage often won't pay enough after a serious accident, and you could owe the rest yourself." },
+          { label: "Pause your insurance for a couple of months while money is tight.",
+            points: 0,
+            why: "Driving without insurance is illegal in almost every state. One accident could cost you your license and thousands of dollars." }
+        ]
+      },
+      {
+        id: "textbooks", kind: "surprise", who: ["student"],
+        title: "Textbooks",
+        text: "The new semester's books cost $350 new at the campus bookstore.",
+        options: [
+          { label: "Rent or buy used copies online, and check the library's reserve desk. Total: $120 from this month's fun money.",
+            points: 10,
+            why: "Renting, buying used, and library reserves can cut textbook costs by more than half." },
+          { label: "Buy them new with your emergency fund.",
+            points: 5, fund: -350,
+            why: "Textbooks aren't a surprise — they come every semester. Plan for them in a sinking fund and shop around." },
+          { label: "Buy them new on your credit card.",
+            points: 3, card: 350,
+            why: "Adds $350 of 24% debt for something you could have gotten much cheaper." },
+          { label: "Skip buying books and get by on lecture notes.",
+            points: 3,
+            why: "Saving money at the cost of your grades can cost more later. Cheaper options were available." }
+        ]
+      },
+      {
+        id: "laptop", kind: "surprise", who: ["student"],
+        title: "Laptop dies",
+        text: "Your laptop won't turn on, and you have a paper due next week.",
+        options: [
+          { label: "Take it to campus IT first. It's a bad battery: $120 from your emergency fund.",
+            points: 10, fund: -120,
+            why: "Checking free or cheap campus help first turned a $400+ problem into $120." },
+          { label: "Buy a refurbished laptop for $350 from your emergency fund.",
+            points: 7, fund: -350,
+            why: "Refurbished is a smart way to save, but you didn't check if the old one could be fixed." },
+          { label: "Buy a $400 laptop with \"buy now, pay later\" — 4 payments of $100.",
+            points: 5, checking: -100, later: [{ checking: -100 }, { checking: -100 }, { checking: -100 }],
+            why: "No interest, but it's another bill for 3 months, and missed payments bring fees." },
+          { label: "Get a $1,200 laptop on a store card with \"no interest for 12 months.\"",
+            points: 2, card: 1200,
+            why: "Way more laptop than you need, and deferred-interest cards charge ALL the back interest if it's not paid in full in time." }
+        ]
+      },
+      {
+        id: "roommate", kind: "surprise", who: ["student"],
+        title: "Roommate moves out",
+        text: "Your roommate moves out suddenly. Until you find someone new, your rent share goes up $300 a month.",
+        options: [
+          { label: "Post the room on trusted sites, screen people carefully, and cover one month from your emergency fund.",
+            points: 10, fund: -300,
+            why: "A short-term problem got a short-term fix. The fund covered the gap while you found a new roommate." },
+          { label: "Cover the extra rent by cutting fun and giving.",
+            points: 6, raise: { housing: 300 }, cut: { amount: 300, from: ["fun", "giving", "savings"] },
+            why: "Responsible, but it treats a temporary problem as permanent. Finding a new roommate should be the priority." },
+          { label: "Put the extra rent on your credit card while you look.",
+            points: 3, card: 300,
+            why: "Rent on a credit card is a warning sign. Borrowing at 24% for rent can snowball fast." },
+          { label: "Break the lease and move back home.",
+            points: 3, checking: -600,
+            why: "Breaking a lease often costs a penalty (here, $600) and can hurt future rental applications." }
+        ]
+      },
+      {
+        id: "childcare", kind: "surprise", who: ["family"],
+        title: "Childcare costs go up",
+        text: "Your daycare is raising tuition by $150 a month.",
+        options: [
+          { label: "Sign up for your job's Dependent Care FSA (pay childcare with pre-tax money), and cover the rest from fun.",
+            points: 10, raise: { kids: 150 }, income: 45, cut: { amount: 105, from: ["fun", "giving"] },
+            why: "A Dependent Care FSA lets you pay childcare with money that isn't taxed — here, saving about $45 a month. Ask HR if you have one." },
+          { label: "Accept the increase and cut $150 from fun and giving.",
+            points: 7, raise: { kids: 150 }, cut: { amount: 150, from: ["fun", "giving"] },
+            why: "You adjusted right away. Tax benefits for childcare could have softened the hit." },
+          { label: "Accept the increase and stop $150 of monthly savings.",
+            points: 4, raise: { kids: 150 }, cut: { amount: 150, from: ["savings", "fun"] },
+            why: "Cutting wants before your safety net keeps your family protected." },
+          { label: "Accept the increase and keep everything else the same.",
+            points: 1, raise: { kids: 150 },
+            why: "Your plan now spends $150 more than you earn each month, and it comes out of checking." }
+        ]
+      },
+      {
+        id: "school-trip", kind: "surprise", who: ["family"],
+        title: "School trip & supplies",
+        text: "Your kids need $120 for a field trip and class supplies by Friday.",
+        options: [
+          { label: "Ask the school about fee waivers or payment plans, then pay what's left from this month's fun money.",
+            points: 10,
+            why: "Schools often have help available. Using fun money for a family need keeps your savings and credit untouched." },
+          { label: "Pay the $120 from this month's fun money.",
+            points: 8,
+            why: "Good — it's covered without debt. Next time, a small monthly \"kids\" sinking fund makes these easy." },
+          { label: "Pay from your emergency fund.",
+            points: 5, fund: -120,
+            why: "School costs are expected, not emergencies. A sinking fund keeps your emergency fund ready for real surprises." },
+          { label: "Put it on the credit card.",
+            points: 3, card: 120,
+            why: "Small charges add up. This could have come from fun money with no interest." }
+        ]
+      },
+
+      /* ---------- GOOD NEWS & OPPORTUNITIES ---------- */
+      {
+        id: "bonus", kind: "good",
+        title: "Work bonus",
+        text: "You get a surprise $300 bonus at work this month.",
+        options: [
+          { label: "Split it: $150 to emergency fund, $100 extra on the credit card, $50 to enjoy.",
+            points: 10, fund: 150, card: -100,
+            why: "You enjoyed a little, grew your safety net, and paid down expensive debt." },
+          { label: "Put all $300 into your emergency fund.",
+            points: 8, fund: 300,
+            why: "A strong choice, especially with a small fund. A small reward keeps budgeting sustainable." },
+          { label: "Put all $300 toward your credit card.",
+            points: 8, card: -300,
+            why: "Paying 24% debt is a guaranteed \"return.\" Balance it with some savings if your fund is small." },
+          { label: "Treat yourself to a shopping trip — you earned it.",
+            points: 2,
+            why: "Enjoying some is fine, but spending all of it means none of it works for future you." }
+        ]
+      },
+      {
+        id: "tax-refund", kind: "good",
+        title: "Tax refund",
+        text: "Your $900 tax refund arrives.",
+        options: [
+          { label: "Put $500 in your emergency fund, $300 on your credit card, and keep $100 for fun.",
+            points: 10, fund: 500, card: -300, checking: 100,
+            why: "A balanced plan: stronger safety net, less debt, and a little reward." },
+          { label: "Put all $900 on your credit card.",
+            points: 8, card: -900,
+            why: "Great for cutting interest costs. With a small emergency fund, keep some aside for surprises." },
+          { label: "Put all $900 in your emergency fund.",
+            points: 8, fund: 900,
+            why: "Big boost to your safety net. Paying some high-interest debt too would save money." },
+          { label: "Spend it on a new TV and a weekend trip.",
+            points: 2,
+            why: "A refund is one of the few big lump sums most people get each year. Using it to get ahead has lasting impact." }
+        ]
+      },
+      {
+        id: "raise", kind: "good",
+        title: "You got a raise!",
+        text: "Your take-home pay goes up $200 a month.",
+        options: [
+          { label: "Add $100 to monthly savings and $100 to your debt payment.",
+            points: 10, income: 200, raise: { savings: 100, debt: 100 },
+            why: "You gave the new money a job before it could disappear. This is how raises build wealth." },
+          { label: "Leave the extra $200 in checking without a plan.",
+            points: 5, income: 200,
+            why: "Money without a job tends to get spent. Assign it on purpose." },
+          { label: "Add all $200 to fun and lifestyle.",
+            points: 4, income: 200, raise: { fun: 200 },
+            why: "This is \"lifestyle creep\": spending rises with income, so you never get ahead." },
+          { label: "Move to a nicer place that costs $350 more a month.",
+            points: 2, income: 200, raise: { housing: 350 },
+            why: "The upgrade costs more than the raise, so you're now $150 short every month." }
+        ]
+      },
+      {
+        id: "401k", kind: "good", who: ["early", "family"],
+        title: "401(k) match",
+        text: "Your job offers a 401(k) retirement plan. For every $1 you put in (up to 6% of your pay), they add 50¢. Putting in 6% would lower your take-home pay by about $150 a month.",
+        options: [
+          { label: "Sign up at 6% to get the full match, and cut $150 from fun and giving.",
+            points: 10, income: -150, retire: 300, cut: { amount: 150, from: ["fun", "giving"] },
+            why: "An employer match is an instant 50% return — free money. About $300 a month now goes toward retirement." },
+          { label: "Sign up at 2% for now and raise it later.",
+            points: 7, income: -50, retire: 100, cut: { amount: 50, from: ["fun", "giving"] },
+            why: "A good start! You're leaving some free match money on the table, though." },
+          { label: "Wait until your credit card is paid off, then sign up.",
+            points: 5,
+            why: "Paying off debt matters, but a 50% match beats 24% card interest. Most experts say get the full match first." },
+          { label: "Sign up at 15% and keep the rest of your budget the same.",
+            points: 3, income: -375, retire: 600,
+            why: "Big retirement savings — but without cutting spending, your budget is now $375 short each month." }
+        ]
+      },
+      {
+        id: "renters", kind: "good", who: ["student", "early"],
+        title: "Renters insurance",
+        text: "A friend's apartment was robbed. You don't have renters insurance. It would cost about $15 a month.",
+        options: [
+          { label: "Buy a policy and cut $15 from fun.",
+            points: 10, raise: { health: 15 }, cut: { amount: 15, from: ["fun", "giving"] },
+            why: "For about 50¢ a day, renters insurance covers your belongings and liability. Replacing everything yourself could cost thousands." },
+          { label: "Check if a parent's homeowners policy already covers you first.",
+            points: 7,
+            why: "Sometimes it does (especially for students in dorms), but often not for off-campus apartments. Be sure to confirm in writing." },
+          { label: "Skip it — you don't own much worth stealing.",
+            points: 3,
+            why: "Most people underestimate what their stuff is worth: clothes, laptop, phone, furniture. It also covers liability if someone gets hurt at your place." }
+        ]
+      },
+
+      /* ---------- TEMPTATIONS ---------- */
+      {
+        id: "crypto", kind: "temptation",
+        title: "A \"sure thing\" investment",
+        text: "A coworker says a crypto platform pays a \"guaranteed 20% per month.\" They show you their profits on the app.",
+        options: [
+          { label: "Politely say no. Guaranteed high returns are a classic scam sign.",
+            points: 10,
+            why: "No real investment guarantees 20% a month. Fake profit screens are how these scams hook people." },
+          { label: "Try just $50 from fun money to see if it's real.",
+            points: 3, checking: -50,
+            why: "The $50 is gone. Scam platforms often let small withdrawals work to build trust before stealing bigger amounts." },
+          { label: "Invest $500 from your emergency fund.",
+            points: 0, fund: -500,
+            why: "The platform disappeared with your money. Never invest your emergency fund, and never in \"guaranteed\" returns." },
+          { label: "Put $1,000 on your credit card to invest.",
+            points: 0, card: 1000,
+            why: "The money is gone, but the debt stays — at 24% interest." }
+        ]
+      },
+      {
+        id: "subscriptions", kind: "temptation",
+        title: "Subscription check-up",
+        text: "You notice you're paying for 6 streaming and app subscriptions — $78 a month total.",
+        options: [
+          { label: "Keep the 2 you use most, cancel 4, and move the $50 saved into savings.",
+            points: 10, shift: { amount: 50, from: ["fun"], to: "savings" },
+            why: "Small subscriptions quietly add up. That $50 a month is $600 a year toward your goals." },
+          { label: "Rotate: keep one service at a time and switch each month.",
+            points: 8, shift: { amount: 60, from: ["fun"], to: "savings" },
+            why: "A smart trick — you still get your shows for a fraction of the cost." },
+          { label: "Cancel all of them to save every dollar.",
+            points: 6, shift: { amount: 78, from: ["fun"], to: "savings" },
+            why: "Saves the most, but a budget with zero joy is hard to stick to. Keep something you enjoy." },
+          { label: "Keep them all — they're only a few dollars each.",
+            points: 3,
+            why: "\"Only a few dollars\" times six is almost $1,000 a year." }
+        ]
+      },
+      {
+        id: "friend-trip", kind: "temptation",
+        title: "Weekend trip invite",
+        text: "Friends invite you on a $600 weekend trip in two months.",
+        options: [
+          { label: "Suggest a cheaper day trip instead, and pay your $60 share from fun money.",
+            points: 10,
+            why: "You still made memories with friends — for 10% of the cost." },
+          { label: "Say yes, and save $300 a month from fun for the next two months to pay for it.",
+            points: 9,
+            why: "Planning ahead for a fun expense (a sinking fund) means no debt and no stress." },
+          { label: "Say yes and put it on your credit card.",
+            points: 2, card: 600,
+            why: "A fun weekend can take many months to pay off at minimum payments." },
+          { label: "Say yes and pay with your emergency fund.",
+            points: 2, fund: -600,
+            why: "A trip isn't an emergency. Now there's less there for a real one." }
+        ]
+      },
+      {
+        id: "new-car", kind: "temptation", who: ["early", "family"],
+        title: "New car offer",
+        text: "Your current car runs fine. A dealer ad says: \"Drive a brand-new car for $0 down — just $520 a month for 72 months!\"",
+        options: [
+          { label: "Keep your car, and start putting $100 a month from fun into savings for the next one.",
+            points: 10, shift: { amount: 100, from: ["fun"], to: "savings" },
+            why: "Saving ahead lets you buy your next car with a big down payment (or in cash), saving thousands in interest." },
+          { label: "Keep your car and don't change anything.",
+            points: 7,
+            why: "Good call. Even better: start saving now for the day it needs replacing." },
+          { label: "Buy a reliable used car for $260 a month instead.",
+            points: 3, raise: { transport: 260 },
+            why: "Cheaper than new, but your current car runs fine. It's a new $260 bill your budget didn't plan for." },
+          { label: "Buy the new car — $520 a month.",
+            points: 1, raise: { transport: 520 },
+            why: "That's $37,440 over 6 years, and new cars lose value fast. Your budget is now $520 short every month." }
+        ]
+      },
+      {
+        id: "balance-transfer", kind: "temptation", who: ["early", "family"],
+        title: "0% balance transfer offer",
+        text: "A card offers 0% interest for 15 months if you move your credit card balance over. There's a 3% transfer fee.",
+        options: [
+          { label: "Transfer the balance, pay the 3% fee, and keep paying the same amount each month.",
+            points: 10, cardZero: true, cardFeePct: 0.03,
+            why: "With no interest, every payment goes straight to the balance. Just make sure it's paid off before the 0% ends." },
+          { label: "Say no thanks and keep paying the current card.",
+            points: 5,
+            why: "Safe, but you keep paying 24% interest. Used carefully, a transfer can save a lot." },
+          { label: "Transfer it, then lower your payment to the minimum since there's no interest.",
+            points: 3, cardZero: true, cardFeePct: 0.03, shift: { amount: "extraDebt", from: ["debt"], to: "fun" },
+            why: "Paying less means a big balance is still there when the 0% ends — and then interest returns." },
+          { label: "Open the card and spend $1,000 to earn a $200 sign-up bonus.",
+            points: 2, card: 1000, checking: 200,
+            why: "Spending $1,000 you didn't plan to spend to get $200 back is a net loss of $800." }
+        ]
+      },
+      {
+        id: "spring-break", kind: "temptation", who: ["student"],
+        title: "Spring break",
+        text: "Friends are planning a $500 spring break trip.",
+        options: [
+          { label: "Plan a cheaper trip nearby with friends — $150, paid from fun money.",
+            points: 10,
+            why: "Same friends, same memories, a third of the cost, and no debt." },
+          { label: "Pay with \"buy now, pay later\": 4 payments of $125.",
+            points: 3, checking: -125, later: [{ checking: -125 }, { checking: -125 }, { checking: -125 }],
+            why: "The trip is over in days, but the payments last for months." },
+          { label: "Put it on your credit card.",
+            points: 2, card: 500,
+            why: "At minimum payments, a $500 trip can take years to pay off." },
+          { label: "Use your emergency fund.",
+            points: 1, fund: -500,
+            why: "Vacations aren't emergencies. Your safety net is now much smaller." }
+        ]
+      },
+      {
+        id: "store-card", kind: "temptation", who: ["student"],
+        title: "Store card offer",
+        text: "At checkout, the cashier says: \"Open our store card today and get 20% off everything!\"",
+        options: [
+          { label: "Say no thanks and pay for what you came for with your debit card.",
+            points: 10,
+            why: "Store cards often have very high interest (often 30%) and encourage extra shopping." },
+          { label: "Open it, buy only the $60 you came for, and pay it off right away.",
+            points: 6, checking: 12,
+            why: "Saved $12, but opening new cards causes a credit inquiry, and it's one more account to manage." },
+          { label: "Open it and buy $300 of clothes since it's 20% off.",
+            points: 2, card: 240,
+            why: "\"20% off\" things you didn't plan to buy is still spending $240 you didn't have." }
+        ]
+      },
+      {
+        id: "holiday", kind: "temptation", who: ["family"],
+        title: "Holiday gifts",
+        text: "The holidays are coming, and the kids' wish lists add up to $700.",
+        options: [
+          { label: "Set a $250 gift limit and pay it from this month's fun and giving money.",
+            points: 10,
+            why: "Kids remember time together more than price tags. A set limit prevents a January debt hangover." },
+          { label: "Use \"buy now, pay later\" for all $700: 4 payments of $175.",
+            points: 3, checking: -175, later: [{ checking: -175 }, { checking: -175 }, { checking: -175 }],
+            why: "Holiday BNPL payments stack up fast and last into the new year." },
+          { label: "Put all $700 on the credit card.",
+            points: 2, card: 700,
+            why: "Holiday debt is one of the most common reasons card balances grow." },
+          { label: "Pay for everything from the emergency fund.",
+            points: 2, fund: -700,
+            why: "Holidays come every year — they're predictable, not emergencies. A monthly holiday sinking fund is the fix." }
+        ]
       }
+    ];
 
-      function updatePill() {
-        if (state.step === 1) stepPill.textContent = "Step 1 of 3 — Pick a profile";
-        else if (state.step === 2) stepPill.textContent = "Step 2 of 3 — Build your budget";
-        else if (state.step === 3) stepPill.textContent = "Step 3 of 3 — Curveball " + (state.questionIndex + 1) + " of " + TOTAL_QUESTIONS;
-        else stepPill.textContent = "Results";
+    const stepIndicatorEl = document.getElementById("wgra-budget-step-indicator");
+    const mainCardEl = document.getElementById("wgra-budget-main-card");
+    const rootEl = document.getElementById("wgra-budget-game-root");
+
+    const gameState = {};
+
+    // Prevent auto-scroll until the user interacts
+    let userInteracted = false;
+    ["click", "touchstart", "keydown", "wheel"].forEach(evt => {
+      window.addEventListener(evt, () => { userInteracted = true; }, { once: true, passive: true });
+    });
+
+    function smoothScrollTo(el) {
+      if (!userInteracted) return; // stops the initial "drop"
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top + window.scrollY - 120;
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+
+    function formatMoney(num) {
+      const rounded = Math.round(num);
+      const sign = rounded < 0 ? "−" : "";
+      return sign + "$" + Math.abs(rounded).toLocaleString("en-US");
+    }
+
+    function signedMoney(num) {
+      return (num >= 0 ? "+" : "−") + "$" + Math.abs(Math.round(num)).toLocaleString("en-US");
+    }
+
+    // Fair shuffle (Fisher–Yates)
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i]; a[i] = a[j]; a[j] = t;
       }
+      return a;
+    }
 
-      // -------- STEP 1 --------
-      function renderStep1() {
-        state.step = 1;
-        updatePill();
+    function profile() {
+      return PROFILES.find(p => p.id === gameState.profileId);
+    }
 
-        var profilesHtml = PROFILES.map(function(p) {
-          var sel = (state.profileId === p.id) ? " selected" : "";
-          return '<div class="profile' + sel + '" data-pid="' + p.id + '">' +
-                   '<h4>' + p.name + '</h4>' +
-                   '<div class="income">' + money(p.income) + ' / month</div>' +
-                   '<div class="desc">' + p.desc + '</div>' +
-                 '</div>';
-        }).join("");
+    function visibleCategories() {
+      return CATEGORIES.filter(c => !c.only || c.only.indexOf(gameState.profileId) !== -1);
+    }
 
-        var incomeVal = state.income ? state.income : "";
+    function sumMins(p) {
+      return Object.keys(p.min).reduce((t, k) => t + p.min[k], 0);
+    }
 
-        mainCard.innerHTML =
-          '<h3>Pick your starting scenario</h3>' +
-          '<p>Choose the profile closest to you — or just pick one to practice. You can adjust the monthly take-home below.</p>' +
-          '<div class="profiles">' + profilesHtml + '</div>' +
-          '<div class="field-row">' +
-            '<label for="income-input">Monthly take-home income</label>' +
-            '<input id="income-input" class="field-input" type="number" inputmode="numeric" min="500" step="50" value="' + incomeVal + '" />' +
-            '<div class="field-hint">The amount that actually hits your bank account after taxes.</div>' +
-          '</div>' +
-          '<div class="controls">' +
-            '<button class="btn btn-secondary" id="b1-reset">Reset</button>' +
-            '<button class="btn btn-primary" id="b1-next" disabled>Next</button>' +
-          '</div>';
+    function totalBudget() {
+      return visibleCategories().reduce((t, c) => t + (gameState.budget[c.id] || 0), 0);
+    }
 
-        var nextBtn = document.getElementById("b1-next");
-        var incomeInp = document.getElementById("income-input");
+    function debtHint() {
+      const p = profile();
+      let hint = "Credit card: " + formatMoney(p.card) + " balance at 24% interest, " + formatMoney(p.cardMin) + " minimum";
+      if (p.otherDebt) hint += " + " + p.otherDebtLabel;
+      return hint + ". Anything above the minimum pays the card down faster.";
+    }
 
-        mainCard.querySelectorAll(".profile").forEach(function(el) {
-          el.addEventListener("click", function() {
-            var id = el.getAttribute("data-pid");
-            var p = PROFILES.find(function(x) { return x.id === id; });
-            if (!p) return;
-            state.profileId = id;
-            state.income = p.income;
-            incomeInp.value = p.income;
-            mainCard.querySelectorAll(".profile").forEach(function(e) { e.classList.remove("selected"); });
-            el.classList.add("selected");
-            nextBtn.disabled = false;
-          });
-        });
-
-        incomeInp.addEventListener("input", function() {
-          var v = parseFloat(incomeInp.value || "0");
-          if (v >= 500) { state.income = v; nextBtn.disabled = false; }
-          else { state.income = 0; nextBtn.disabled = true; }
-        });
-
-        nextBtn.addEventListener("click", function() {
-          if (state.income >= 500) renderStep2();
-        });
-
-        document.getElementById("b1-reset").addEventListener("click", function() {
-          resetGame(true);
-        });
-
-        if (state.income >= 500) nextBtn.disabled = false;
+    function updateStepIndicator() {
+      rootEl.classList.toggle("is-first", gameState.step === 1);
+      if (gameState.step === 1) {
+        stepIndicatorEl.textContent = "Step 1 of 3 — Choose your life";
+      } else if (gameState.step === 2) {
+        stepIndicatorEl.textContent = "Step 2 of 3 — Build your monthly budget";
+      } else if (gameState.step === 3) {
+        stepIndicatorEl.textContent = "Step 3 of 3 — Month " + (gameState.questionIndex + 1) + " of " + TOTAL_QUESTIONS;
+      } else {
+        stepIndicatorEl.textContent = "Budget Builder Quest™ — Results";
       }
+    }
 
-      // -------- STEP 2 --------
-      function renderStep2() {
-        state.step = 2;
-        updatePill();
+    /* =================== STEP 1: PROFILE =================== */
 
-        if (!state.income || state.income < 500) state.income = 2600;
-        if (Object.keys(state.categoryValues).length === 0) {
-          CATEGORIES.forEach(function(c) {
-            state.categoryValues[c.id] = Math.round(state.income * c.defaultPct);
-          });
+    function renderStep1() {
+      gameState.step = 1;
+      updateStepIndicator();
+
+      const cards = PROFILES.map(p => `
+        <div class="wgra-budget-profile-card${p.id === gameState.profileId ? " wgra-selected" : ""}"
+             data-profile-id="${p.id}" role="button" tabindex="0"
+             aria-pressed="${p.id === gameState.profileId ? "true" : "false"}">
+          <p class="wgra-budget-profile-name">${p.name}</p>
+          <p class="wgra-budget-profile-income">Take-home pay: ${formatMoney(p.income)}/month</p>
+          <p class="wgra-budget-profile-desc">${p.desc}</p>
+          <ul class="wgra-budget-profile-facts">
+            <li>💰 Emergency fund: ${formatMoney(p.fund)}</li>
+            <li>💳 Credit card debt: ${formatMoney(p.card)}</li>
+            <li>🏠 Rent + utilities: ${formatMoney(p.min.housing)}</li>
+          </ul>
+        </div>
+      `).join("");
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Pick a life to practice with</h3>
+          <p class="wgra-budget-section-copy">
+            Choose the profile that feels closest to you, or just pick one to practice.
+            You'll build a budget, then live with it for 5 months of real-life curveballs.
+          </p>
+
+          <div class="wgra-budget-profiles">${cards}</div>
+
+          <div class="wgra-budget-income-row">
+            <label for="wgra-budget-income-input">Monthly take-home pay (you can change it):</label>
+            <input id="wgra-budget-income-input" class="wgra-budget-income-input" type="number"
+                   min="500" step="50" value="${gameState.income || ""}" />
+          </div>
+          <div class="wgra-budget-income-note">
+            Take-home pay is the amount that actually lands in your bank account after taxes and deductions.
+          </div>
+          <div class="wgra-budget-alert" id="wgra-budget-step1-alert"></div>
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-reset-game">Reset</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-step1-next" disabled>Start building my budget</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const profileEls = mainCardEl.querySelectorAll(".wgra-budget-profile-card");
+      const incomeInput = document.getElementById("wgra-budget-income-input");
+      const nextBtn = document.getElementById("wgra-budget-step1-next");
+      const alertEl = document.getElementById("wgra-budget-step1-alert");
+
+      function validate() {
+        alertEl.textContent = "";
+        const p = profile();
+        if (!p) { nextBtn.disabled = true; return; }
+        const val = parseFloat(incomeInput.value || "0");
+        const needed = sumMins(p);
+        if (!(val >= needed)) {
+          nextBtn.disabled = true;
+          alertEl.textContent = "At " + formatMoney(val || 0) + " a month, this household can't cover its basic bills (" +
+            formatMoney(needed) + "). Try a higher income or a different profile.";
+          return;
         }
+        gameState.income = Math.round(val);
+        nextBtn.disabled = false;
+      }
 
-        var rows = CATEGORIES.map(function(c) {
-          var v = state.categoryValues[c.id] || 0;
-          var pct = state.income ? (v / state.income) * 100 : 0;
-          return '<div class="budget-row">' +
-                   '<div>' +
-                     '<div class="cat-label">' + c.label + '</div>' +
-                     '<div class="cat-hint">' + c.hint + '</div>' +
-                     '<div class="cat-pct" data-pct="' + c.id + '">' + pct.toFixed(1) + '% of income</div>' +
-                   '</div>' +
-                   '<input type="number" inputmode="numeric" min="0" step="10" data-cat="' + c.id + '" value="' + v + '" />' +
-                 '</div>';
-        }).join("");
+      function selectProfile(el) {
+        const id = el.getAttribute("data-profile-id");
+        const p = PROFILES.find(x => x.id === id);
+        if (!p) return;
+        gameState.profileId = id;
+        gameState.budget = {};
+        incomeInput.value = p.income;
+        profileEls.forEach(x => {
+          x.classList.remove("wgra-selected");
+          x.setAttribute("aria-pressed", "false");
+        });
+        el.classList.add("wgra-selected");
+        el.setAttribute("aria-pressed", "true");
+        validate();
+      }
 
-        mainCard.innerHTML =
-          '<h3>Build your monthly budget</h3>' +
-          '<p>Give every dollar a job. Cover essentials, protect savings, and give fun money a clear limit.</p>' +
-          '<div class="field-hint" style="margin-bottom:12px;">Take-home income: <strong style="color:var(--gold-soft);">' + money(state.income) + '</strong></div>' +
-          rows +
-          '<div class="summary">' +
-            '<div class="summary-line"><span>Total allocated</span><strong id="b2-total">$0</strong></div>' +
-            '<div class="summary-line"><span>Of income</span><span id="b2-of">' + money(state.income) + '</span></div>' +
-            '<div class="summary-line summary-status" id="b2-status"></div>' +
-          '</div>' +
-          '<div class="hint">Aim for 10%+ to savings when possible. Even 1–5% builds the habit if money is tight.</div>' +
-          '<div class="alert" id="b2-alert"></div>' +
-          '<div class="controls">' +
-            '<button class="btn btn-secondary" id="b2-back">Back</button>' +
-            '<button class="btn btn-primary" id="b2-next">Lock budget</button>' +
-          '</div>';
+      profileEls.forEach(el => {
+        el.addEventListener("click", () => selectProfile(el));
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectProfile(el); }
+        });
+      });
 
-        var inputs = mainCard.querySelectorAll('input[data-cat]');
-        var totalEl = document.getElementById("b2-total");
-        var statusEl = document.getElementById("b2-status");
-        var alertEl = document.getElementById("b2-alert");
+      incomeInput.addEventListener("input", validate);
+      nextBtn.addEventListener("click", () => { if (!nextBtn.disabled) renderStep2(); });
+      document.getElementById("wgra-budget-reset-game").addEventListener("click", () => resetGame(true));
 
-        function recalc() {
-          var total = 0;
-          inputs.forEach(function(inp) {
-            var id = inp.getAttribute("data-cat");
-            var v = parseFloat(inp.value || "0");
-            state.categoryValues[id] = isNaN(v) ? 0 : v;
-            total += state.categoryValues[id];
-            var pctEl = mainCard.querySelector('[data-pct="' + id + '"]');
-            if (pctEl) pctEl.textContent = ((v / state.income) * 100 || 0).toFixed(1) + "% of income";
-          });
-          state.totalAllocated = total;
-          totalEl.textContent = money(total);
-          var diff = state.income - total;
-          statusEl.classList.remove("ok", "bad");
-          alertEl.textContent = "";
-          if (Math.abs(diff) < 1) {
-            statusEl.textContent = "Every dollar has a job.";
-            statusEl.classList.add("ok");
-          } else if (diff > 0) {
-            statusEl.textContent = money(diff) + " unassigned.";
-            statusEl.classList.add("ok");
-          } else {
-            statusEl.textContent = "Over budget by " + money(Math.abs(diff)) + ".";
-            statusEl.classList.add("bad");
-          }
+      validate();
+      smoothScrollTo(rootEl);
+    }
+
+    /* =================== STEP 2: BUDGET =================== */
+
+    function renderStep2() {
+      gameState.step = 2;
+      updateStepIndicator();
+      const p = profile();
+      const cats = visibleCategories();
+
+      if (!gameState.budget || Object.keys(gameState.budget).length === 0) {
+        gameState.budget = {};
+        cats.forEach(c => { gameState.budget[c.id] = p.lastMonth[c.id] || 0; });
+      }
+
+      const lastMonthTotal = cats.reduce((t, c) => t + (p.lastMonth[c.id] || 0), 0);
+
+      const rowsHtml = cats.map(cat => {
+        const value = gameState.budget[cat.id] || 0;
+        const min = p.min[cat.id] || 0;
+        const hint = cat.id === "debt" ? debtHint() : cat.hint;
+        return `
+          <div class="wgra-budget-category-label">
+            <div>${cat.label}</div>
+            <div class="wgra-budget-category-hint">${hint}</div>
+            ${min > 0 ? `<div class="wgra-budget-min">${cat.minLabel}: at least ${formatMoney(min)}</div>` : ""}
+          </div>
+          <div>
+            <input type="number" class="wgra-budget-number-input" min="${min}" step="10" inputmode="numeric"
+              data-cat-id="${cat.id}" value="${value}" aria-label="${cat.label} amount">
+          </div>
+          <div class="wgra-budget-percentage" data-cat-pct="${cat.id}"></div>
+        `;
+      }).join("");
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Build your monthly budget</h3>
+          <p class="wgra-budget-section-copy">
+            Give every dollar a job. Cover your bills, build savings, pay down debt, and give fun money a clear limit.
+          </p>
+
+          <div class="wgra-budget-lastmonth">
+            📋 <strong>These numbers are what you spent last month:</strong> ${formatMoney(lastMonthTotal)} on
+            ${formatMoney(gameState.income)} of income, with $0 saved. Now make a better plan.
+          </div>
+
+          <div class="wgra-budget-grid">
+            <div class="wgra-budget-grid-header">Category</div>
+            <div class="wgra-budget-grid-header">Amount</div>
+            <div class="wgra-budget-grid-header" style="text-align:right;">% of pay</div>
+            ${rowsHtml}
+          </div>
+
+          <div class="wgra-budget-summary-row">
+            <div>
+              <span>Total planned:</span>
+              <strong id="wgra-budget-total-allocated"></strong>
+              <span> / ${formatMoney(gameState.income)}</span>
+            </div>
+            <div class="wgra-budget-summary-status" id="wgra-budget-summary-status"></div>
+          </div>
+
+          <div class="wgra-budget-hints">
+            💡 Tips: Try to save at least 10% if you can — even 1–5% builds the habit. Paying more than the
+            minimum on a 24% credit card saves a lot of interest. Keep some fun money; budgets with zero fun rarely last.
+          </div>
+
+          <div class="wgra-budget-alert" id="wgra-budget-alert" role="alert"></div>
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-step2-back">Back</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-step2-next">Lock in this budget</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const inputs = mainCardEl.querySelectorAll(".wgra-budget-number-input");
+      const totalEl = document.getElementById("wgra-budget-total-allocated");
+      const statusEl = document.getElementById("wgra-budget-summary-status");
+      const alertEl = document.getElementById("wgra-budget-alert");
+
+      function recalc() {
+        inputs.forEach(inp => {
+          const id = inp.getAttribute("data-cat-id");
+          const val = parseFloat(inp.value || "0");
+          gameState.budget[id] = isNaN(val) || val < 0 ? 0 : Math.round(val);
+          inp.classList.toggle("wgra-too-low", gameState.budget[id] < (p.min[id] || 0));
+          const pctEl = mainCardEl.querySelector('[data-cat-pct="' + id + '"]');
+          if (pctEl) pctEl.textContent = ((gameState.budget[id] / gameState.income) * 100).toFixed(1) + "%";
+        });
+
+        const total = totalBudget();
+        totalEl.textContent = formatMoney(total);
+        const diff = gameState.income - total;
+
+        statusEl.classList.remove("wgra-ok", "wgra-bad");
+        if (diff === 0) {
+          statusEl.textContent = "✔ Every dollar has a job.";
+          statusEl.classList.add("wgra-ok");
+        } else if (diff > 0) {
+          statusEl.textContent = formatMoney(diff) + " doesn't have a job yet.";
+          statusEl.classList.add("wgra-bad");
+        } else {
+          statusEl.textContent = "Over budget by " + formatMoney(-diff) + ".";
+          statusEl.classList.add("wgra-bad");
         }
-        inputs.forEach(function(inp) { inp.addEventListener("input", recalc); });
-        recalc();
-
-        document.getElementById("b2-back").addEventListener("click", function() { renderStep1(); });
-        document.getElementById("b2-next").addEventListener("click", function() {
-          recalc();
-          if (state.income - state.totalAllocated < -1) {
-            alertEl.textContent = "You're spending more than you bring in. Trim categories until you're at or below your income.";
-            return;
-          }
-          evaluateBudget();
-          startQuestionPhase();
-        });
       }
 
-      function evaluateBudget() {
-        var c = state.categoryValues;
-        var income = state.income || 1;
-        var savings = c.savings || 0;
-        var fun = c.fun || 0;
-        var essentials = (c.housing || 0) + (c.food || 0) + (c.transport || 0) + (c.debt || 0);
+      inputs.forEach(inp => inp.addEventListener("input", () => { alertEl.textContent = ""; recalc(); }));
+      recalc();
 
-        state.savingsAmount = savings;
-        state.emergencyFund = savings;
-        var savingsPct = (savings / income) * 100;
-        var essPct     = (essentials / income) * 100;
-        var funPct     = (fun / income) * 100;
-
-        var delta = 0;
-        var notes = [];
-
-        if (savingsPct >= 20)      { delta += 12; notes.push("Strong " + savingsPct.toFixed(1) + "% to savings — future you approves."); }
-        else if (savingsPct >= 10) { delta += 8;  notes.push("Hitting the classic 10%+ savings guideline. Great habit."); }
-        else if (savingsPct >= 5)  { delta += 3;  notes.push(savingsPct.toFixed(1) + "% to savings. Small consistent amounts build momentum."); }
-        else if (savingsPct > 0)   { delta -= 3;  notes.push("Savings under 5%. Move dollars from fun into savings over time."); }
-        else                       { delta -= 8;  notes.push("No money to savings yet. Even $10–$20/mo starts a safety net."); }
-
-        if (essPct <= 70)      { delta += 6; notes.push("Essentials ~" + essPct.toFixed(1) + "% of income — breathing room for goals."); }
-        else if (essPct <= 85) { notes.push("Essentials ~" + essPct.toFixed(1) + "% of income. Workable but tight."); }
-        else                   { delta -= 6; notes.push("Essentials at " + essPct.toFixed(1) + "% — housing/food/debt may need adjustments."); }
-
-        if (funPct <= 15)       { delta += 4; notes.push("Fun money at " + funPct.toFixed(1) + "% — lifestyle creep is in check."); }
-        else if (funPct <= 25)  { notes.push("Fun ~" + funPct.toFixed(1) + "%. Watch subscriptions and impulse buys."); }
-        else                    { delta -= 4; notes.push("Fun at " + funPct.toFixed(1) + "%. Trimming frees up savings/debt power."); }
-
-        if ((c.debt || 0) > 0) notes.push("Debt payments scheduled — keeps accounts current and protects credit.");
-        else notes.push("No debt payments reported — more flexibility for savings and goals.");
-
-        state.budgetScoreDelta = delta;
-        state.notes.budget = notes;
-      }
-
-      // -------- STEP 3 --------
-      function startQuestionPhase() {
-        var shuffled = EVENTS.slice().sort(function() { return Math.random() - 0.5; });
-        var seq = [];
-        var i = 0;
-        while (seq.length < TOTAL_QUESTIONS) {
-          seq.push(shuffled[i % shuffled.length]);
-          i++;
-        }
-        state.eventSequence = seq;
-        state.questionIndex = 0;
-        state.eventScoreDelta = 0;
-        state.notes.event = [];
-        renderQuestion();
-      }
-
-      function renderQuestion() {
-        state.step = 3;
-        updatePill();
-        var ev = state.eventSequence[state.questionIndex];
-        var projected = Math.max(0, Math.min(100, state.baseScore + state.budgetScoreDelta + state.eventScoreDelta));
-        var isLast = (state.questionIndex === TOTAL_QUESTIONS - 1);
-        var nextLabel = isLast ? "See results" : "Next curveball";
-
-        mainCard.innerHTML =
-          '<h3>' + ev.title + '</h3>' +
-          '<p>' + ev.text + '</p>' +
-          '<div class="summary" style="margin-bottom:6px;">' +
-            '<div class="summary-line"><span>Money Health Score (running)</span><strong>' + projected + '/100</strong></div>' +
-          '</div>' +
-          '<div class="event-options" id="event-options">' +
-            ev.options.map(function(o) {
-              return '<button class="event-option" data-opt="' + o.id + '">' + o.label + '</button>';
-            }).join("") +
-          '</div>' +
-          '<div id="event-feedback"></div>' +
-          '<div class="controls">' +
-            '<button class="btn btn-secondary" id="q-back">Back</button>' +
-            '<button class="btn btn-primary" id="q-next" disabled>' + nextLabel + '</button>' +
-          '</div>';
-
-        var optsEl = document.getElementById("event-options");
-        var fbEl   = document.getElementById("event-feedback");
-        var nextBtn = document.getElementById("q-next");
-        var answered = false;
-
-        optsEl.querySelectorAll(".event-option").forEach(function(btn) {
-          btn.addEventListener("click", function() {
-            if (answered) return;
-            answered = true;
-            optsEl.classList.add("locked");
-            var optId = btn.getAttribute("data-opt");
-            var chosen = ev.options.find(function(o) { return o.id === optId; });
-            if (!chosen) return;
-            btn.classList.add(chosen.impact >= 0 ? "selected" : "bad");
-            state.eventScoreDelta += chosen.impact;
-            if (ev.emergencyHit) state.emergencyFund -= ev.emergencyHit;
-            var label = chosen.impact >= 0 ? "Solid move" : "Risky move";
-            fbEl.innerHTML = '<div class="event-feedback"><strong>' + label + '</strong>' + chosen.explanation + '</div>';
-            state.notes.event.push(label + ": " + chosen.explanation);
-            nextBtn.disabled = false;
-          });
-        });
-
-        document.getElementById("q-back").addEventListener("click", function() { renderStep2(); });
-        nextBtn.addEventListener("click", function() {
-          if (!answered) return;
-          if (isLast) renderFinal();
-          else { state.questionIndex++; renderQuestion(); }
-        });
-      }
-
-      // -------- FINAL --------
-      function renderFinal() {
-        state.step = 4;
-        updatePill();
-        var finalScore = Math.max(0, Math.min(100, state.baseScore + state.budgetScoreDelta + state.eventScoreDelta));
-        var msg;
-        if (finalScore >= 90) msg = "Championship-level budget. The habits you practice here can power real-world wealth.";
-        else if (finalScore >= 75) msg = "Strong foundation. A few tweaks — especially around savings and big fixed costs — push you into elite territory.";
-        else if (finalScore >= 60) msg = "Heading in the right direction. Tighten the plan and keep practicing smarter choices.";
-        else msg = "Budgets are skills, not personality tests. Every round trains your eye for better money decisions.";
-
-        var c = state.categoryValues;
-        var income = state.income;
-        var expenses = (c.housing||0) + (c.food||0) + (c.transport||0) + (c.debt||0) + (c.fun||0);
-        var savings = c.savings || 0;
-        var emergency = state.emergencyFund;
-        var emergencyClass = emergency >= 0 ? "good" : "bad";
-
-        var allNotes = (state.notes.budget || []).concat(state.notes.event || []);
-        var notesHtml = allNotes.map(function(n) { return '<li>' + n + '</li>'; }).join("");
-
-        mainCard.innerHTML =
-          '<div class="score-card">' +
-            '<div class="score-label">Money Health Score</div>' +
-            '<div class="score-value">' + finalScore + '<span class="of">/100</span></div>' +
-            '<div class="score-bar"><span style="width:' + finalScore + '%;"></span></div>' +
-            '<div class="score-msg">' + msg + '</div>' +
-          '</div>' +
-          '<div class="stat-grid">' +
-            '<div class="stat"><div class="stat-label">Income</div><div class="stat-value">' + money(income) + '</div></div>' +
-            '<div class="stat"><div class="stat-label">Expenses</div><div class="stat-value">' + money(expenses) + '</div></div>' +
-            '<div class="stat"><div class="stat-label">Savings (planned)</div><div class="stat-value good">' + money(savings) + '</div></div>' +
-            '<div class="stat"><div class="stat-label">Emergency fund impact</div><div class="stat-value ' + emergencyClass + '">' + (emergency >= 0 ? "+" : "−") + money(Math.abs(emergency)) + '</div></div>' +
-          '</div>' +
-          '<h3 style="margin-top:18px;">What helped or hurt</h3>' +
-          '<ul class="notes-list">' + notesHtml + '</ul>' +
-          '<div class="controls">' +
-            '<button class="btn btn-secondary" id="r-home">Home</button>' +
-            '<button class="btn btn-primary" id="r-again">Play again</button>' +
-          '</div>';
-
-        document.getElementById("r-home").addEventListener("click", function() { show("landing"); });
-        document.getElementById("r-again").addEventListener("click", function() {
-          resetGame(false);
-        });
-      }
-
-      function resetGame(fullReset) {
-        state.step = 1;
-        state.categoryValues = {};
-        state.totalAllocated = 0;
-        state.savingsAmount = 0;
-        state.emergencyFund = 0;
-        state.budgetScoreDelta = 0;
-        state.eventScoreDelta = 0;
-        state.eventSequence = [];
-        state.questionIndex = 0;
-        state.notes.budget = [];
-        state.notes.event = [];
-        if (fullReset) {
-          state.profileId = null;
-          state.income = 0;
-        }
+      document.getElementById("wgra-budget-step2-back").addEventListener("click", () => {
+        gameState.budget = {};
         renderStep1();
+      });
+
+      document.getElementById("wgra-budget-step2-next").addEventListener("click", () => {
+        recalc();
+        const problems = [];
+        cats.forEach(c => {
+          const min = p.min[c.id] || 0;
+          if (gameState.budget[c.id] < min) {
+            problems.push(c.label + " must be at least " + formatMoney(min) + " (" + (c.minLabel || "minimum").toLowerCase() + ").");
+          }
+        });
+        const diff = gameState.income - totalBudget();
+        if (diff < 0) {
+          problems.push("You're planning to spend " + formatMoney(-diff) + " more than you earn. Trim some categories.");
+        }
+        if (problems.length) {
+          alertEl.innerHTML = problems.join("<br>");
+          return;
+        }
+        if (diff > 0 && !gameState.warnedUnassigned) {
+          gameState.warnedUnassigned = true;
+          alertEl.innerHTML = "Heads up: " + formatMoney(diff) + " doesn't have a job. Money without a plan tends to disappear. " +
+            "Assign it (savings or extra debt payments are great choices), or press “Lock in” again to keep it in checking.";
+          return;
+        }
+        startQuestionPhase();
+      });
+
+      smoothScrollTo(rootEl);
+    }
+
+    function scorePlan() {
+      const p = profile();
+      const b = gameState.budget;
+      const income = gameState.income;
+      const notes = [];
+      let pts = 0;
+
+      const unassigned = income - totalBudget();
+      if (unassigned <= 10) {
+        pts += 5; notes.push("✔ Every dollar had a job.");
+      } else if (unassigned <= income * 0.05) {
+        pts += 3; notes.push("Almost every dollar had a job (" + formatMoney(unassigned) + " left unassigned).");
+      } else {
+        notes.push("✖ " + formatMoney(unassigned) + " a month had no job. Unplanned money tends to slip away.");
       }
 
-      resetGame(true);
-    })();
-  </script>
+      const savePct = (b.savings / income) * 100;
+      if (savePct >= 10) { pts += 10; notes.push("✔ You saved " + savePct.toFixed(0) + "% of your pay — excellent."); }
+      else if (savePct >= 5) { pts += 7; notes.push("✔ You saved " + savePct.toFixed(0) + "% of your pay. Work toward 10%."); }
+      else if (savePct > 0) { pts += 4; notes.push("You saved " + savePct.toFixed(1) + "% — a start. Small amounts build the habit."); }
+      else { notes.push("✖ Nothing went to savings, so surprises had to come from debt or checking."); }
+
+      const extraDebt = b.debt - p.min.debt;
+      if (extraDebt > 0) { pts += 5; notes.push("✔ You paid " + formatMoney(extraDebt) + " a month above your minimums."); }
+      else { notes.push("✖ You paid only the minimum on a 24% credit card."); }
+
+      const funPct = (b.fun / income) * 100;
+      if (funPct >= 5 && funPct <= 20) { pts += 5; notes.push("✔ Fun money was a healthy " + funPct.toFixed(0) + "% of pay."); }
+      else if (funPct > 20 && funPct <= 30) { pts += 2; notes.push("Fun money was " + funPct.toFixed(0) + "% of pay — on the high side."); }
+      else if (funPct > 30) { notes.push("✖ Fun money was " + funPct.toFixed(0) + "% of pay — too high to get ahead."); }
+      else if (funPct > 0) { pts += 3; notes.push("Fun money was very tight (" + funPct.toFixed(1) + "%). Budgets with almost no fun are hard to stick to."); }
+      else { pts += 1; notes.push("✖ No fun money at all. Budgets with zero fun rarely last."); }
+
+      return { pts: pts, notes: notes };
+    }
+
+    /* =================== STEP 3: CURVEBALLS =================== */
+
+    function pickCurveballs() {
+      const eligible = shuffle(CURVEBALLS.filter(c => !c.who || c.who.indexOf(gameState.profileId) !== -1));
+      const picks = [];
+      ["good", "temptation", "surprise", "surprise"].forEach(kind => {
+        const found = eligible.find(c => c.kind === kind && picks.indexOf(c) === -1);
+        if (found) picks.push(found);
+      });
+      eligible.forEach(c => { if (picks.length < TOTAL_QUESTIONS && picks.indexOf(c) === -1) picks.push(c); });
+      return shuffle(picks);
+    }
+
+    function startQuestionPhase() {
+      const p = profile();
+      const plan = scorePlan();
+
+      gameState.planPts = plan.pts;
+      gameState.planNotes = plan.notes;
+      gameState.startBudget = Object.assign({}, gameState.budget);
+      gameState.startIncome = gameState.income;
+      gameState.fund = p.fund;
+      gameState.card = p.card;
+      gameState.checking = START_CHECKING;
+      gameState.retirement = 0;
+      gameState.retireMonthly = 0;
+      gameState.cardRate = 0.02;          // about 24% a year
+      gameState.fees = 0;
+      gameState.feeCount = 0;
+      gameState.scheduled = [];
+      gameState.choices = [];
+      gameState.questionIndex = 0;
+      gameState.sequence = pickCurveballs();
+      gameState.startNumbers = { fund: p.fund, card: p.card, checking: START_CHECKING };
+
+      gameState.lastRecap = runMonth();   // first payday
+      renderQuestion();
+    }
+
+    // One month passes: payday, bills, savings, card payment and interest, scheduled payments
+    function runMonth() {
+      const p = profile();
+      const b = gameState.budget;
+      const recap = { income: gameState.income, spent: 0, saved: b.savings || 0, cardInterest: 0, cardPaid: 0, scheduled: 0, overdraft: false };
+
+      gameState.checking += gameState.income;
+
+      visibleCategories().forEach(c => {
+        if (c.id === "savings" || c.id === "debt") return;
+        gameState.checking -= (b[c.id] || 0);
+        recap.spent += (b[c.id] || 0);
+      });
+
+      // Savings
+      gameState.checking -= (b.savings || 0);
+      gameState.fund += (b.savings || 0);
+
+      // Debt: other loans first, then the credit card
+      const debtPay = b.debt || 0;
+      gameState.checking -= debtPay;
+      recap.spent += debtPay;
+      const cardInterest = gameState.card * gameState.cardRate;
+      gameState.card += cardInterest;
+      recap.cardInterest = cardInterest;
+      let cardPay = Math.max(0, debtPay - p.otherDebt);
+      if (cardPay > gameState.card) {
+        gameState.checking += cardPay - gameState.card;  // card paid off — extra stays in checking
+        cardPay = gameState.card;
+      }
+      gameState.card -= cardPay;
+      recap.cardPaid = cardPay;
+
+      // Retirement
+      gameState.retirement += gameState.retireMonthly;
+
+      // Scheduled payments from earlier choices
+      const due = gameState.scheduled.shift();
+      if (due) {
+        recap.scheduled = (due.checking || 0) - (due.fee || 0);
+        applyMoney(due);
+      }
+
+      if (gameState.checking < 0) {
+        gameState.checking -= OVERDRAFT_FEE;
+        gameState.fees += OVERDRAFT_FEE;
+        gameState.feeCount++;
+        recap.overdraft = true;
+      }
+
+      return recap;
+    }
+
+    // Apply one-time money effects
+    function applyMoney(e) {
+      if (e.fund) gameState.fund += e.fund;
+      if (e.checking) gameState.checking += e.checking;
+      if (e.fee) {
+        gameState.checking -= e.fee;
+        gameState.fees += e.fee;
+        gameState.feeCount++;
+      }
+      if (e.card) {
+        gameState.card += e.card;
+        if (gameState.card < 0) {            // paid more than owed — the rest goes to checking
+          gameState.checking += -gameState.card;
+          gameState.card = 0;
+        }
+      }
+    }
+
+    function cutFrom(amount, from) {
+      const cuts = {};
+      let left = amount;
+      from.forEach(cat => {
+        if (left <= 0) return;
+        const floor = profile().min[cat] || 0;
+        const available = Math.max(0, (gameState.budget[cat] || 0) - floor);
+        const take = Math.min(available, left);
+        if (take > 0) {
+          gameState.budget[cat] -= take;
+          cuts[cat] = take;
+          left -= take;
+        }
+      });
+      return { cuts: cuts, shortfall: left };
+    }
+
+    function applyOption(opt) {
+      const changes = [];
+      const before = { fund: gameState.fund, card: gameState.card, checking: gameState.checking };
+
+      if (opt.cardFeePct) {
+        const fee = Math.round(gameState.card * opt.cardFeePct);
+        gameState.card += fee;
+        changes.push("Balance transfer fee added to your card: " + formatMoney(fee));
+      }
+      if (opt.cardZero) {
+        gameState.cardRate = 0;
+        changes.push("Credit card interest: 0% for the rest of the game");
+      }
+
+      applyMoney(opt);
+
+      if (gameState.fund !== before.fund) changes.push("Emergency fund: " + signedMoney(gameState.fund - before.fund));
+      if (gameState.card !== before.card && !opt.cardFeePct) changes.push("Credit card balance: " + signedMoney(gameState.card - before.card));
+      if (gameState.checking !== before.checking) changes.push("Checking: " + signedMoney(gameState.checking - before.checking) + (opt.fee ? " (includes a " + formatMoney(opt.fee) + " fee)" : ""));
+
+      if (opt.income) {
+        gameState.income += opt.income;
+        changes.push("Monthly take-home pay: " + signedMoney(opt.income));
+      }
+      if (opt.retire) {
+        gameState.retireMonthly += opt.retire;
+        changes.push("401(k): " + formatMoney(opt.retire) + " a month (your money + employer match)");
+      }
+      if (opt.raise) {
+        Object.keys(opt.raise).forEach(cat => {
+          gameState.budget[cat] = (gameState.budget[cat] || 0) + opt.raise[cat];
+          changes.push("Monthly " + CAT_LABEL[cat] + ": " + signedMoney(opt.raise[cat]));
+        });
+      }
+      if (opt.cut) {
+        const r = cutFrom(opt.cut.amount, opt.cut.from);
+        Object.keys(r.cuts).forEach(cat => changes.push("Monthly " + CAT_LABEL[cat] + ": " + signedMoney(-r.cuts[cat])));
+        if (r.shortfall > 0) changes.push("Couldn't cut the full amount — " + formatMoney(r.shortfall) + " a month is still uncovered");
+      }
+      if (opt.shift) {
+        const amt = opt.shift.amount === "extraDebt"
+          ? Math.max(0, gameState.budget.debt - profile().min.debt)
+          : opt.shift.amount;
+        const r = cutFrom(amt, opt.shift.from);
+        const moved = amt - r.shortfall;
+        if (moved > 0) {
+          gameState.budget[opt.shift.to] = (gameState.budget[opt.shift.to] || 0) + moved;
+          changes.push("Moved " + formatMoney(moved) + " a month from " + Object.keys(r.cuts).map(c => CAT_LABEL[c]).join(" & ") + " to " + CAT_LABEL[opt.shift.to]);
+        }
+      }
+      if (opt.later) {
+        opt.later.forEach((eff, i) => {
+          gameState.scheduled[i] = mergeEffects(gameState.scheduled[i], eff);
+        });
+        const pays = opt.later.filter(e => (e.checking || 0) < 0 || e.fee);
+        if (pays.length) {
+          const total = pays.reduce((t, e) => t - (e.checking || 0) + (e.fee || 0), 0);
+          changes.push("Upcoming payments: " + formatMoney(total) + " over the next " + opt.later.length + " months");
+        }
+        const back = opt.later.filter(e => (e.checking || 0) > 0 || (e.fund || 0) > 0);
+        if (back.length) {
+          const total = back.reduce((t, e) => t + Math.max(0, e.checking || 0) + Math.max(0, e.fund || 0), 0);
+          changes.push("Coming back to you later: " + formatMoney(total));
+        }
+      }
+
+      const gap = gameState.income - totalBudget();
+      if (gap < 0) changes.push("⚠️ Your monthly plan now spends " + formatMoney(-gap) + " more than you earn");
+
+      return changes;
+    }
+
+    function mergeEffects(a, b) {
+      const out = Object.assign({}, a || {});
+      ["fund", "checking", "card", "fee"].forEach(k => {
+        if (b[k]) out[k] = (out[k] || 0) + b[k];
+      });
+      return out;
+    }
+
+    function tilesHtml() {
+      const gap = gameState.income - totalBudget();
+      return `
+        <div class="wgra-budget-tiles">
+          <div class="wgra-budget-tile">
+            <div class="wgra-budget-tile-label">Checking</div>
+            <div class="wgra-budget-tile-value${gameState.checking < 0 ? " wgra-neg" : ""}">${formatMoney(gameState.checking)}</div>
+            <div class="wgra-budget-tile-note">${gap >= 0 ? formatMoney(gap) + " extra each month" : formatMoney(-gap) + " short each month"}</div>
+          </div>
+          <div class="wgra-budget-tile">
+            <div class="wgra-budget-tile-label">Emergency fund</div>
+            <div class="wgra-budget-tile-value">${formatMoney(gameState.fund)}</div>
+            <div class="wgra-budget-tile-note">Saving ${formatMoney(gameState.budget.savings || 0)}/month</div>
+          </div>
+          <div class="wgra-budget-tile">
+            <div class="wgra-budget-tile-label">Credit card</div>
+            <div class="wgra-budget-tile-value${gameState.card > 0 ? " wgra-neg" : ""}">${formatMoney(gameState.card)}</div>
+            <div class="wgra-budget-tile-note">${gameState.cardRate > 0 ? "24% interest" : "0% interest"}</div>
+          </div>
+          <div class="wgra-budget-tile">
+            <div class="wgra-budget-tile-label">${gameState.retirement > 0 || gameState.retireMonthly > 0 ? "401(k)" : "Fees paid"}</div>
+            <div class="wgra-budget-tile-value">${gameState.retirement > 0 || gameState.retireMonthly > 0 ? formatMoney(gameState.retirement) : formatMoney(gameState.fees)}</div>
+            <div class="wgra-budget-tile-note">${gameState.retirement > 0 || gameState.retireMonthly > 0 ? "Fees paid: " + formatMoney(gameState.fees) : "Late & overdraft fees"}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function recapHtml(r, label) {
+      if (!r) return "";
+      let html = "<strong>" + label + ":</strong> Payday " + signedMoney(r.income) +
+        ", bills & spending " + signedMoney(-r.spent) +
+        ", saved " + formatMoney(r.saved);
+      if (r.cardInterest > 0.5) html += ", card interest " + formatMoney(r.cardInterest);
+      if (r.scheduled) html += ", " + (r.scheduled < 0 ? "earlier payments due " : "money returned ") + signedMoney(r.scheduled);
+      html += ".";
+      if (r.overdraft) html += ' <span class="wgra-bad-text">Checking went negative: ' + formatMoney(OVERDRAFT_FEE) + " overdraft fee.</span>";
+      return '<div class="wgra-budget-recap">' + html + "</div>";
+    }
+
+    function planHtml() {
+      const rows = visibleCategories().map(c =>
+        "<div>" + c.label + '</div><div class="wgra-r">' + formatMoney(gameState.budget[c.id] || 0) + "</div>"
+      ).join("");
+      return `
+        <details class="wgra-budget-plan">
+          <summary>See your current monthly plan</summary>
+          <div class="wgra-budget-plan-grid">
+            <div><strong>Take-home pay</strong></div><div class="wgra-r"><strong>${formatMoney(gameState.income)}</strong></div>
+            ${rows}
+            <div><strong>Total planned</strong></div><div class="wgra-r"><strong>${formatMoney(totalBudget())}</strong></div>
+          </div>
+        </details>
+      `;
+    }
+
+    function verdict(points) {
+      if (points >= 9) return { text: "Best move", cls: "wgra-budget-verdict-best" };
+      if (points >= 5) return { text: "Okay move", cls: "wgra-budget-verdict-ok" };
+      return { text: "Costly move", cls: "wgra-budget-verdict-bad" };
+    }
+
+    const KIND_LABEL = { surprise: "Surprise", good: "Opportunity", temptation: "Temptation" };
+
+    function renderQuestion() {
+      gameState.step = 3;
+      updateStepIndicator();
+
+      const cb = gameState.sequence[gameState.questionIndex];
+      const isLast = gameState.questionIndex === TOTAL_QUESTIONS - 1;
+      const order = shuffle(cb.options.map((o, i) => i));
+      const bestPoints = Math.max.apply(null, cb.options.map(o => o.points));
+
+      const optionsHtml = order.map(i => {
+        const o = cb.options[i];
+        const need = o.fund && o.fund < 0 ? -o.fund : 0;
+        const blocked = need > gameState.fund;
+        return `
+          <button type="button" class="wgra-budget-event-option" data-option-index="${i}" ${blocked ? "disabled" : ""}>
+            ${o.label}
+            ${blocked ? "<small>Not possible: your emergency fund only has " + formatMoney(gameState.fund) + ".</small>" : ""}
+          </button>
+        `;
+      }).join("");
+
+      mainCardEl.innerHTML = `
+        <div>
+          ${recapHtml(gameState.lastRecap, gameState.questionIndex === 0 ? "Your first month" : "Last month")}
+          ${tilesHtml()}
+
+          <div class="wgra-budget-event-box">
+            <span class="wgra-budget-kind">${KIND_LABEL[cb.kind]}</span>
+            <div class="wgra-budget-event-title">${cb.title}</div>
+            <div class="wgra-budget-event-text">${cb.text}</div>
+            <div class="wgra-budget-event-options" id="wgra-budget-event-options">${optionsHtml}</div>
+            <div class="wgra-budget-event-feedback" id="wgra-budget-event-feedback"></div>
+          </div>
+
+          ${planHtml()}
+
+          <div class="wgra-budget-controls">
+            <div class="wgra-budget-controls-left">
+              <button class="wgra-budget-btn-secondary" id="wgra-budget-start-over">Start over</button>
+            </div>
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-next-question" disabled>
+                ${isLast ? "Finish & see my results" : "Next month"}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const optionsEl = document.getElementById("wgra-budget-event-options");
+      const feedbackEl = document.getElementById("wgra-budget-event-feedback");
+      const nextBtn = document.getElementById("wgra-budget-next-question");
+      let answered = false;
+
+      optionsEl.querySelectorAll(".wgra-budget-event-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (answered || btn.disabled) return;
+          answered = true;
+          optionsEl.classList.add("wgra-locked");
+          btn.classList.add("wgra-selected");
+          optionsEl.querySelectorAll("button").forEach(b => { b.disabled = true; });
+
+          const opt = cb.options[parseInt(btn.getAttribute("data-option-index"), 10)];
+          const changes = applyOption(opt);
+          const v = verdict(opt.points);
+
+          gameState.choices.push({ title: cb.title, label: opt.label, points: opt.points, verdict: v.text });
+
+          let html = '<strong class="' + v.cls + '">' + v.text + " (" + opt.points + "/10)</strong> — " + opt.why;
+          if (changes.length) {
+            html += '<ul class="wgra-budget-changes">' + changes.map(c => "<li>" + c + "</li>").join("") + "</ul>";
+          }
+          if (opt.points < bestPoints) {
+            const best = cb.options.filter(o => o.points === bestPoints)[0];
+            html += "<div style=\"margin-top:8px;\"><strong>Best move here:</strong> " + best.label + "</div>";
+            optionsEl.querySelectorAll("button").forEach(b => {
+              if (cb.options[parseInt(b.getAttribute("data-option-index"), 10)].points === bestPoints) {
+                b.classList.add("wgra-best-reveal");
+              }
+            });
+          }
+          feedbackEl.innerHTML = html;
+
+          nextBtn.disabled = false;
+          smoothScrollTo(feedbackEl);
+        });
+      });
+
+      document.getElementById("wgra-budget-start-over").addEventListener("click", () => resetGame(false));
+
+      nextBtn.addEventListener("click", () => {
+        if (!answered) return;
+        gameState.lastRecap = runMonth();
+        if (isLast) {
+          renderFinal();
+        } else {
+          gameState.questionIndex++;
+          renderQuestion();
+        }
+      });
+
+      smoothScrollTo(rootEl);
+    }
+
+    /* =================== RESULTS =================== */
+
+    function renderFinal() {
+      gameState.step = 4;
+      updateStepIndicator();
+      const p = profile();
+      const s = gameState.startNumbers;
+
+      // Money still owed on payment plans after the game ends
+      const stillOwed = gameState.scheduled.reduce((t, e) => t + Math.max(0, -(e && e.checking || 0)) + (e && e.fee || 0), 0);
+      const netChecking = gameState.checking - stillOwed;
+
+      const choicePts = gameState.choices.reduce((t, c) => t + c.points, 0);
+
+      let outcomePts = 0;
+      const fundRatio = gameState.fund / gameState.startIncome;
+      if (fundRatio >= 0.5) outcomePts += 8;
+      else if (fundRatio >= 0.25) outcomePts += 6;
+      else if (gameState.fund > 0) outcomePts += 3;
+
+      if (gameState.card <= 0) outcomePts += 6;
+      else if (gameState.card <= s.card * 0.9) outcomePts += 6;
+      else if (gameState.card < s.card) outcomePts += 4;
+
+      if (gameState.feeCount === 0) outcomePts += 6;
+      else if (gameState.feeCount === 1) outcomePts += 3;
+
+      if (netChecking >= 0) outcomePts += 5;
+
+      const total = Math.max(0, Math.min(100, Math.round(gameState.planPts + choicePts + outcomePts)));
+
+      let message;
+      if (total >= 90) message = "Championship-level money moves. The habits you practiced here can power real-world wealth.";
+      else if (total >= 75) message = "A strong foundation. A few tweaks can push you into elite territory.";
+      else if (total >= 60) message = "You're heading in the right direction. Review the lessons below and play again.";
+      else message = "Budgets are skills, not personality tests. Every round trains your eye for better money decisions.";
+
+      // Pick the most useful lessons
+      const lessons = [];
+      if (gameState.startBudget.savings <= 0 || gameState.fund < s.fund) {
+        lessons.push("<strong>Build your emergency fund first.</strong> Even $25 a month adds up, and it turns surprises into inconveniences instead of debt.");
+      }
+      if (gameState.card >= s.card) {
+        lessons.push("<strong>Attack high-interest debt.</strong> At 24%, every $100 on a credit card costs about $24 a year. Paying above the minimum saves real money.");
+      }
+      if (gameState.feeCount > 0) {
+        lessons.push("<strong>Protect your checking account.</strong> You paid " + formatMoney(gameState.fees) + " in fees. Low-balance alerts and a small cushion prevent overdrafts.");
+      }
+      if (gameState.income - totalBudget() < 0) {
+        lessons.push("<strong>When costs go up, change the plan right away.</strong> Your budget ended up spending more than you earn each month.");
+      }
+      if (gameState.choices.some(c => c.points <= 4)) {
+        lessons.push("<strong>Before paying, ask:</strong> Is there a payment plan, discount, second quote, or cheaper option? One phone call often saves money.");
+      }
+      lessons.push("<strong>Give every dollar a job.</strong> Plan before payday, and adjust whenever life changes.");
+      const topLessons = lessons.slice(0, 3);
+
+      const bar = (label, pts, max) => `
+        <div>
+          <div class="wgra-budget-bar-label"><span>${label}</span><strong>${pts}/${max}</strong></div>
+          <div class="wgra-budget-bar"><span style="width:${Math.round((pts / max) * 100)}%"></span></div>
+        </div>
+      `;
+
+      const retireRow = gameState.retirement > 0
+        ? `<tr><td>401(k) retirement</td><td>$0</td><td>${formatMoney(gameState.retirement)}</td></tr>`
+        : "";
+
+      mainCardEl.innerHTML = `
+        <div>
+          <h3 class="wgra-budget-section-title">Your Budget Builder Quest™ results — ${p.name}</h3>
+
+          <div style="text-align:center; margin-bottom:6px;">
+            <div class="wgra-budget-score-badge">Money Health Score: ${total}/100</div>
+            <p class="wgra-budget-final-copy">${message}</p>
+          </div>
+
+          <div class="wgra-budget-breakdown">
+            ${bar("Your budget plan", gameState.planPts, 25)}
+            ${bar("Your curveball choices", choicePts, 50)}
+            ${bar("Where you ended up", outcomePts, 25)}
+          </div>
+
+          <table class="wgra-budget-compare">
+            <thead><tr><th>Where you ended up</th><th>Start</th><th>End</th></tr></thead>
+            <tbody>
+              <tr><td>Emergency fund</td><td>${formatMoney(s.fund)}</td><td>${formatMoney(gameState.fund)}</td></tr>
+              <tr><td>Credit card debt</td><td>${formatMoney(s.card)}</td><td>${formatMoney(gameState.card)}</td></tr>
+              <tr><td>Checking</td><td>${formatMoney(s.checking)}</td><td>${formatMoney(gameState.checking)}</td></tr>
+              ${stillOwed > 0 ? `<tr><td>Still owed on payment plans</td><td>$0</td><td>${formatMoney(stillOwed)}</td></tr>` : ""}
+              ${retireRow}
+              <tr><td>Fees paid</td><td>$0</td><td>${formatMoney(gameState.fees)}</td></tr>
+            </tbody>
+          </table>
+
+          <div class="wgra-budget-lessons">
+            <strong>Take these with you:</strong>
+            <ol>${topLessons.map(l => "<li>" + l + "</li>").join("")}</ol>
+          </div>
+
+          <p class="wgra-budget-section-title" style="font-size:17px;">Your budget plan</p>
+          <ul class="wgra-budget-final-list">${gameState.planNotes.map(n => "<li>" + n + "</li>").join("")}</ul>
+
+          <p class="wgra-budget-section-title" style="font-size:17px; margin-top:14px;">Your choices</p>
+          <ul class="wgra-budget-final-list">
+            ${gameState.choices.map(c => "<li><strong>" + c.title + ":</strong> " + c.verdict + " (" + c.points + "/10)</li>").join("")}
+          </ul>
+
+          <div class="wgra-budget-end-message">
+            Every time you replay with a different life, budget, or choices, you're training your real-life money instincts.
+          </div>
+
+          <div class="wgra-budget-controls" style="margin-top:20px;">
+            <div class="wgra-budget-controls-right">
+              <button class="wgra-budget-btn" id="wgra-budget-play-again">Play again</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("wgra-budget-play-again").addEventListener("click", () => resetGame(false));
+
+      smoothScrollTo(rootEl);
+    }
+
+    function resetGame(fullReset) {
+      const keepProfile = !fullReset ? gameState.profileId : null;
+      const keepIncome = !fullReset && gameState.profileId ? gameState.startIncome || gameState.income : 0;
+      Object.keys(gameState).forEach(k => { delete gameState[k]; });
+      gameState.step = 1;
+      gameState.profileId = keepProfile;
+      gameState.income = keepIncome || 0;
+      gameState.budget = {};
+      renderStep1();
+    }
+
+    // Android back button: step 2 goes back to step 1; during the 5 months,
+    // ask before leaving; results go back to step 1. On step 1, let the app
+    // ask before exiting.
+    window.bbqBack = function () {
+      if (gameState.step === 2) {
+        gameState.budget = {};
+        renderStep1();
+        return true;
+      }
+      if (gameState.step === 3) {
+        if (window.confirm("Leave this quest? Your progress will be lost.")) resetGame(false);
+        return true;
+      }
+      if (gameState.step === 4) {
+        resetGame(false);
+        return true;
+      }
+      return false;
+    };
+
+    // Start game
+    resetGame(true);
+  })();
+</script>
+<script>
+(function () {
+  "use strict";
+  var splash = document.getElementById("app-splash");
+  setTimeout(function () {
+    splash.classList.add("out");
+    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 500);
+  }, 1300);
+
+  var scrim = document.getElementById("scrim");
+  function openSheetEl() { return document.querySelector(".sheet.open"); }
+  function closeSheets() {
+    Array.prototype.forEach.call(document.querySelectorAll(".sheet.open"), function (s) { s.classList.remove("open"); });
+    scrim.classList.remove("open");
+  }
+  function openSheet(id) {
+    closeSheets();
+    var s = document.getElementById(id);
+    if (!s) return;
+    s.classList.add("open");
+    scrim.classList.add("open");
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-sheet],[data-close]") : null;
+    if (t && t.hasAttribute("data-sheet")) { openSheet(t.getAttribute("data-sheet")); return; }
+    if (t && t.hasAttribute("data-close")) { closeSheets(); return; }
+    if (e.target === scrim) closeSheets();
+  });
+
+  // Android back button (called by MainActivity). Returns true when handled;
+  // false lets the app ask before exiting.
+  window.onAndroidBack = function () {
+    if (openSheetEl()) { closeSheets(); return true; }
+    if (window.bbqBack && window.bbqBack()) return true;
+    return false;
+  };
+})();
+</script>
 </body>
 </html>

@@ -3,6 +3,33 @@
 All notable changes to Budget Builder Quest are documented here. Versions
 follow `versionName` / `versionCode` from `android/app/build.gradle`.
 
+## v1.1.0 — 2026-10-01
+
+**New game version and real-app look.**
+
+### Changed
+- Game rebuilt from the latest web version: choose a life, build a full
+  monthly budget with realistic minimums, then live with it for 5 months of
+  curveballs (29 in the bank) with checking, emergency fund, 24% credit card
+  interest, fees, and a 401(k) tracked month by month.
+- Money Health Score now covers your budget plan, your choices, and where you
+  ended up.
+- Signed with a new key. Uninstall v1.0.x before installing v1.1.0.
+
+### Added
+- Black launch screen with the big logo (no white box on Android 12+), and a
+  new launcher icon that fills round, squircle, and square icon shapes.
+- Solid app bar with About / How it works, Privacy, and Credits panels.
+- Android back button: steps back from the budget, asks before leaving a
+  quest, and asks before exiting the app.
+- GitHub Actions signed release workflow and `tools/validate-release.sh`.
+
+### Removed
+- Social-media and GoFundMe bars and the "Explore other games" link from the
+  new web version.
+- The `INTERNET` permission that Capacitor merges in is now stripped from the
+  final manifest.
+
 ## v1.0.1 — 2026-05-23
 
 **Standalone-APK overhaul.**
