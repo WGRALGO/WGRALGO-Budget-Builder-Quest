@@ -3,6 +3,14 @@
 All notable changes to Budget Builder Quest are documented here. Versions
 follow `versionName` / `versionCode` from `android/app/build.gradle`.
 
+## v2.0.0 — 2026-10-01
+
+- Version 2.0.0 (versionCode 200).
+- The APK file is now named `WGRALGO-BudgetBuilderQuest-v2.0.0.apk`. All WGRALGO apps now use the same `WGRALGO-<AppName>-v<version>.apk` naming.
+- The app is no longer locked to portrait. It now rotates with your phone or tablet, like the other WGRALGO apps.
+- On phones turned sideways, the logo on the start screen is smaller, so the game starts on screen instead of below the logo.
+- No changes to the questions, scoring, privacy, or license.
+
 ## v1.1.0 — 2026-10-01
 
 **New game version and real-app look.**

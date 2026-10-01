@@ -8,7 +8,8 @@ live with it for **5 months of real-life curveballs**. Every choice changes
 your checking account, emergency fund, and credit card, and the game ends with
 a **Money Health Score**.
 
-- **Version:** 1.1.0
+- **Version:** 2.0.0
+- **Devices:** phones and tablets, portrait and landscape
 - **Package:** `com.wgra.budgetbuilder2`
 - No accounts.
 - No ads.
@@ -63,7 +64,7 @@ inside the Android WebView. Stored in [`screenshots/`](./screenshots/).
 
 ## Install (sideload the APK)
 
-1. Download `WGRALGO_Budget_Builder_Quest_v1.1.0.apk` from the
+1. Download `WGRALGO-BudgetBuilderQuest-v2.0.0.apk` from the
    [Releases](https://github.com/WGRALGO/WGRALGO-Budget-Builder-Quest/releases)
    page.
 2. On your Android device, allow install from unknown sources for your file
@@ -72,7 +73,7 @@ inside the Android WebView. Stored in [`screenshots/`](./screenshots/).
 4. (Optional) Verify the download with the published SHA-256 hash:
 
    ```bash
-   sha256sum -c WGRALGO_Budget_Builder_Quest_v1.1.0.apk.sha256
+   sha256sum -c WGRALGO-BudgetBuilderQuest-v2.0.0.apk.sha256
    ```
 
 > **Upgrading from v1.0.0 or v1.0.1?** Version 1.1.0 is signed with a new key,
@@ -85,7 +86,7 @@ inside the Android WebView. Stored in [`screenshots/`](./screenshots/).
 - SHA-256: `05:09:30:71:1A:43:6D:D4:8A:DE:4D:B9:E3:D3:DB:8A:65:E5:DC:18:62:18:78:E5:B7:4E:7A:AE:06:E3:DA:77`
 
 ```bash
-apksigner verify --print-certs WGRALGO_Budget_Builder_Quest_v1.1.0.apk
+apksigner verify --print-certs WGRALGO-BudgetBuilderQuest-v2.0.0.apk
 ```
 
 ---
